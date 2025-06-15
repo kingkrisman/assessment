@@ -41,11 +41,15 @@ export const Header = () => {
   );
 };
 
-export const SubHeader = () => {
+interface SubHeaderProps {
+  onCreateTask: () => void;
+}
+
+export const SubHeader: React.FC<SubHeaderProps> = ({ onCreateTask }) => {
   return (
-    <div className="bg-white px-8 py-4 border-b border-brand-gray-200">
+    <div className="bg-white px-4 lg:px-8 py-4 border-b border-brand-gray-200">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-8">
+        <div className="flex items-center space-x-4 lg:space-x-8">
           {/* Board View */}
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
@@ -55,11 +59,11 @@ export const SubHeader = () => {
                 <div className="w-3 h-2 border border-brand-dark rounded-sm"></div>
                 <div className="w-3 h-2 border border-brand-dark rounded-sm"></div>
               </div>
-              <span className="font-semibold text-brand-dark text-base">
+              <span className="font-semibold text-brand-dark text-base hidden sm:inline">
                 Board view
               </span>
             </div>
-            <div className="w-8 h-0.5 bg-brand-dark"></div>
+            <div className="w-8 h-0.5 bg-brand-dark hidden sm:block"></div>
           </div>
 
           {/* Add View */}
@@ -67,16 +71,18 @@ export const SubHeader = () => {
             <div className="w-[18px] h-[18px] rounded-full bg-brand-gray-200 flex items-center justify-center">
               <Plus className="w-3 h-3 text-brand-dark/40" strokeWidth={2} />
             </div>
-            <span className="font-semibold text-base">Add view</span>
+            <span className="font-semibold text-base hidden md:inline">
+              Add view
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-3 lg:space-x-6">
           {/* Filter & Sort */}
-          <span className="font-semibold text-brand-dark text-base">
+          <span className="font-semibold text-brand-dark text-base hidden md:inline">
             Filter
           </span>
-          <span className="font-semibold text-brand-dark/50 text-base">
+          <span className="font-semibold text-brand-dark/50 text-base hidden md:inline">
             Sort
           </span>
 
@@ -85,9 +91,13 @@ export const SubHeader = () => {
             <MoreHorizontal className="w-4 h-4 text-brand-dark" />
           </div>
 
-          {/* New Template Button */}
-          <button className="bg-brand-dark text-white px-6 py-3 rounded-[19px] font-semibold text-sm">
-            New template
+          {/* New Task Button */}
+          <button
+            onClick={onCreateTask}
+            className="bg-brand-dark text-white px-4 lg:px-6 py-3 rounded-[19px] font-semibold text-sm hover:bg-brand-dark/90 transition-colors"
+          >
+            <span className="hidden sm:inline">New Task</span>
+            <span className="sm:hidden">+</span>
           </button>
         </div>
       </div>
