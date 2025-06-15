@@ -130,7 +130,7 @@ export const Sidebar = () => {
   const [lightMode, setLightMode] = useState(true);
 
   return (
-    <div className="w-[318px] h-screen bg-white shadow-sidebar flex flex-col">
+    <div className="w-[318px] h-screen bg-white shadow-sidebar flex flex-col hidden lg:flex">
       <div className="flex-1">
         {/* Header */}
         <div className="p-7 pt-6">
