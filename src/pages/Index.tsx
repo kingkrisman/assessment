@@ -9,7 +9,7 @@ export default function Index() {
   const [rightSidebarOpen, setRightSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div className="flex w-full h-screen min-h-screen bg-white overflow-hidden">
       {/* Mobile Menu Button */}
       <button
         onClick={() => setLeftSidebarOpen(true)}
@@ -31,7 +31,7 @@ export default function Index() {
 
       {/* Left Navigation Sidebar */}
       <div
-        className={`fixed md:relative inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed md:relative h-full z-50 transform transition-transform duration-300 ease-in-out ${
           leftSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
@@ -47,7 +47,7 @@ export default function Index() {
 
       {/* Project Sidebar */}
       <div
-        className={`hidden lg:block fixed lg:relative inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out ${
+        className={`hidden lg:block fixed lg:relative h-full z-40 transform transition-transform duration-300 ease-in-out ${
           rightSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
@@ -55,7 +55,7 @@ export default function Index() {
       </div>
 
       {/* Main Kanban Board Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
         {/* Project Sidebar Toggle for Tablet */}
         <button
           onClick={() => setRightSidebarOpen(true)}
