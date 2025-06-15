@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Plus, MoreVertical, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, MoreVertical, ArrowUp, ArrowDown, Grip } from "lucide-react";
 import { TaskCard } from "./TaskCard";
 import { Task } from "../lib/data";
 
@@ -12,6 +12,7 @@ interface KanbanColumnProps {
   onDeleteTask: (taskId: string) => void;
   onMoveTask: (taskId: string, newStatus: Task["status"]) => void;
   onCreateTask: () => void;
+  screenSize: "mobile" | "tablet" | "desktop";
 }
 
 export const KanbanColumn: React.FC<KanbanColumnProps> = ({
@@ -23,6 +24,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   onDeleteTask,
   onMoveTask,
   onCreateTask,
+  screenSize,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
@@ -51,7 +53,6 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   }, [tasks]);
 
   useEffect(() => {
-    // Re-check scroll position when tasks change
     const timer = setTimeout(checkScrollPosition, 100);
     return () => clearTimeout(timer);
   }, [tasks]);
@@ -62,7 +63,6 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
-    // Only hide drag over state if leaving the column entirely
     if (!e.currentTarget.contains(e.relatedTarget as Node)) {
       setIsDragOver(false);
     }
@@ -108,18 +108,63 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   const getEmptyStateMessage = () => {
     switch (status) {
       case "todo":
-        return "Add your first task";
+        return screenSize === "mobile"
+          ? "Add your first task"
+          : "Add your first task";
       case "inprogress":
-        return "Move tasks here to work on them";
+        return screenSize === "mobile"
+          ? "Move tasks here"
+          : "Move tasks here to work on them";
       case "done":
-        return "Drag your completed tasks here...";
+        return screenSize === "mobile"
+          ? "Completed tasks"
+          : "Drag your completed tasks here...";
       default:
         return "No tasks yet";
     }
   };
 
+  const getColumnWidth = () => {
+    switch (screenSize) {
+      case "mobile":
+        return "w-full";
+      case "tablet":
+        return "w-[280px] min-w-[280px]";
+      case "desktop":
+        return "w-[352px] min-w-[320px]";
+      default:
+        return "w-[352px] min-w-[320px]";
+    }
+  };
+
+  const getColumnPadding = () => {
+    switch (screenSize) {
+      case "mobile":
+        return "p-3";
+      case "tablet":
+        return "p-3";
+      case "desktop":
+        return "p-4";
+      default:
+        return "p-4";
+    }
+  };
+
+  const getHeaderSpacing = () => {
+    switch (screenSize) {
+      case "mobile":
+        return "px-3 py-4";
+      case "tablet":
+        return "px-3 py-4";
+      case "desktop":
+        return "px-4 py-5";
+      default:
+        return "px-4 py-5";
+    }
+  };
+
   return (
-    <div className="w-full md:w-[352px] md:min-w-[320px] flex-shrink-0 h-full flex flex-col">
+    <div className={`${getColumnWidth()} flex-shrink-0 h-full flex flex-col`}>
       {/* Column Container */}
       <div
         className={`relative flex-1 bg-white rounded-xl border-2 border-dashed transition-all duration-200 ${
@@ -132,10 +177,20 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         onDrop={handleDrop}
       >
         {/* Column Header */}
-        <div className="sticky top-0 z-10 bg-white rounded-t-xl px-4 py-5 border-b border-brand-gray-100">
+        <div
+          className={`sticky top-0 z-10 bg-white rounded-t-xl border-b border-brand-gray-100 ${getHeaderSpacing()}`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-semibold text-brand-dark/50">
+              {/* Mobile drag handle */}
+              {screenSize === "mobile" && (
+                <Grip className="w-4 h-4 text-brand-dark/30" />
+              )}
+              <span
+                className={`font-semibold text-brand-dark/50 ${
+                  screenSize === "mobile" ? "text-sm" : "text-sm"
+                }`}
+              >
                 {title} ({count})
               </span>
               {count > 0 && (
@@ -152,32 +207,49 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             </div>
 
             <div className="flex items-center space-x-2">
-              {/* Column Menu */}
-              <button className="p-1 hover:bg-brand-gray-100 rounded-md transition-colors">
-                <MoreVertical className="w-4 h-4 text-brand-dark/40" />
-              </button>
+              {/* Column Menu - Desktop/Tablet only */}
+              {screenSize !== "mobile" && (
+                <button className="p-1 hover:bg-brand-gray-100 rounded-md transition-colors">
+                  <MoreVertical className="w-4 h-4 text-brand-dark/40" />
+                </button>
+              )}
 
               {/* Add Task Button */}
               <button
                 onClick={onCreateTask}
-                className="flex items-center space-x-2 hover:bg-brand-gray-50 px-2 py-1 rounded-lg transition-colors group"
+                className={`flex items-center space-x-2 hover:bg-brand-gray-50 rounded-lg transition-colors group ${
+                  screenSize === "mobile" ? "px-2 py-1" : "px-2 py-1"
+                }`}
               >
-                <div className="w-[18px] h-[18px] rounded-full bg-brand-gray-200 flex items-center justify-center group-hover:bg-brand-dark transition-colors">
+                <div
+                  className={`rounded-full bg-brand-gray-200 flex items-center justify-center group-hover:bg-brand-dark transition-colors ${
+                    screenSize === "mobile" ? "w-4 h-4" : "w-[18px] h-[18px]"
+                  }`}
+                >
                   <Plus
-                    className="w-3 h-3 text-brand-dark/40 group-hover:text-white"
+                    className={`text-brand-dark/40 group-hover:text-white ${
+                      screenSize === "mobile" ? "w-2.5 h-2.5" : "w-3 h-3"
+                    }`}
                     strokeWidth={2}
                   />
                 </div>
-                <span className="hidden lg:inline text-sm font-semibold text-brand-dark group-hover:text-brand-dark/80">
-                  Add new task
-                </span>
+                {screenSize === "desktop" && (
+                  <span className="text-sm font-semibold text-brand-dark group-hover:text-brand-dark/80">
+                    Add new task
+                  </span>
+                )}
+                {screenSize === "tablet" && (
+                  <span className="text-xs font-medium text-brand-dark group-hover:text-brand-dark/80">
+                    Add
+                  </span>
+                )}
               </button>
             </div>
           </div>
 
           {/* Progress Indicator for Column */}
           {count > 0 && (
-            <div className="mt-3">
+            <div className={`${screenSize === "mobile" ? "mt-2" : "mt-3"}`}>
               <div className="w-full h-1 bg-brand-gray-200 rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all duration-500 ${
@@ -196,13 +268,13 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           )}
         </div>
 
-        {/* Scroll Indicators */}
-        {showScrollIndicator && (
+        {/* Scroll Indicators - Desktop/Tablet only */}
+        {showScrollIndicator && screenSize !== "mobile" && (
           <>
             {canScrollUp && (
               <button
                 onClick={scrollToTop}
-                className="absolute top-20 right-2 z-20 w-8 h-8 bg-white shadow-md rounded-full flex items-center justify-center hover:bg-brand-gray-50 transition-colors"
+                className="absolute top-16 right-2 z-20 w-8 h-8 bg-white shadow-md rounded-full flex items-center justify-center hover:bg-brand-gray-50 transition-colors"
               >
                 <ArrowUp className="w-4 h-4 text-brand-dark/60" />
               </button>
@@ -221,13 +293,17 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         {/* Tasks Container with Proper Overflow */}
         <div
           ref={scrollContainerRef}
-          className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-4"
+          className={`flex-1 overflow-y-auto overflow-x-hidden ${getColumnPadding()} pb-4`}
           style={{
             scrollbarWidth: "thin",
             scrollbarColor: "#E5E7EB #F9FAFB",
           }}
         >
-          <div className="space-y-4 pt-2">
+          <div
+            className={`space-y-3 pt-2 ${
+              screenSize === "mobile" ? "space-y-3" : "space-y-4"
+            }`}
+          >
             {tasks.map((task, index) => (
               <div
                 key={task.id}
@@ -241,55 +317,95 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
                   onEdit={onEditTask}
                   onDelete={onDeleteTask}
                   onMove={onMoveTask}
+                  screenSize={screenSize}
                 />
               </div>
             ))}
 
             {/* Empty State */}
             {tasks.length === 0 && (
-              <div className="space-y-4">
+              <div
+                className={`space-y-3 ${
+                  screenSize === "mobile" ? "space-y-3" : "space-y-4"
+                }`}
+              >
                 {/* Primary Empty State */}
                 <div
-                  className={`w-full h-[178px] bg-white rounded-xl border-2 border-dashed transition-all duration-200 flex items-center justify-center group hover:border-brand-gray-400 ${
+                  className={`w-full bg-white rounded-xl border-2 border-dashed transition-all duration-200 flex items-center justify-center group hover:border-brand-gray-400 ${
                     isDragOver
                       ? "border-brand-dark bg-brand-gray-50"
                       : "border-brand-gray-200"
+                  } ${
+                    screenSize === "mobile"
+                      ? "h-[140px]"
+                      : screenSize === "tablet"
+                        ? "h-[160px]"
+                        : "h-[178px]"
                   }`}
                 >
                   <div className="text-center">
                     <div
-                      className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center transition-colors ${
+                      className={`mx-auto mb-3 rounded-full flex items-center justify-center transition-colors ${
                         isDragOver
                           ? "bg-brand-dark text-white"
                           : "bg-brand-gray-100 text-brand-dark/40 group-hover:bg-brand-gray-200"
+                      } ${screenSize === "mobile" ? "w-10 h-10" : "w-12 h-12"}`}
+                    >
+                      <Plus
+                        className={`${
+                          screenSize === "mobile" ? "w-5 h-5" : "w-6 h-6"
+                        }`}
+                      />
+                    </div>
+                    <span
+                      className={`font-bold text-brand-dark/50 group-hover:text-brand-dark/70 transition-colors ${
+                        screenSize === "mobile" ? "text-sm" : "text-base"
                       }`}
                     >
-                      <Plus className="w-6 h-6" />
-                    </div>
-                    <span className="text-base font-bold text-brand-dark/50 group-hover:text-brand-dark/70 transition-colors">
                       {getEmptyStateMessage()}
                     </span>
                   </div>
                 </div>
 
-                {/* Additional Placeholder Spaces */}
-                {Array.from({ length: 2 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="w-full h-[178px] bg-white rounded-xl border-2 border-dashed border-brand-gray-100 flex items-center justify-center opacity-60"
-                  >
-                    <span className="text-sm font-medium text-brand-dark/30">
-                      Drop zone {index + 2}
-                    </span>
-                  </div>
-                ))}
+                {/* Additional Placeholder Spaces - Desktop/Tablet only */}
+                {screenSize !== "mobile" &&
+                  Array.from({ length: screenSize === "tablet" ? 1 : 2 }).map(
+                    (_, index) => (
+                      <div
+                        key={index}
+                        className={`w-full bg-white rounded-xl border-2 border-dashed border-brand-gray-100 flex items-center justify-center opacity-60 ${
+                          screenSize === "tablet" ? "h-[160px]" : "h-[178px]"
+                        }`}
+                      >
+                        <span
+                          className={`font-medium text-brand-dark/30 ${
+                            screenSize === "tablet" ? "text-xs" : "text-sm"
+                          }`}
+                        >
+                          Drop zone {index + 2}
+                        </span>
+                      </div>
+                    ),
+                  )}
               </div>
             )}
 
             {/* Loading skeleton for new tasks */}
             {isDragOver && tasks.length > 0 && (
-              <div className="w-full h-[178px] bg-brand-gray-50 rounded-xl border-2 border-dashed border-brand-dark animate-pulse flex items-center justify-center">
-                <span className="text-base font-bold text-brand-dark/70">
+              <div
+                className={`w-full bg-brand-gray-50 rounded-xl border-2 border-dashed border-brand-dark animate-pulse flex items-center justify-center ${
+                  screenSize === "mobile"
+                    ? "h-[140px]"
+                    : screenSize === "tablet"
+                      ? "h-[160px]"
+                      : "h-[178px]"
+                }`}
+              >
+                <span
+                  className={`font-bold text-brand-dark/70 ${
+                    screenSize === "mobile" ? "text-sm" : "text-base"
+                  }`}
+                >
                   Drop here to move task
                 </span>
               </div>
@@ -298,8 +414,16 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         </div>
 
         {/* Task Count Footer */}
-        <div className="sticky bottom-0 bg-white border-t border-brand-gray-100 px-4 py-2 rounded-b-xl">
-          <div className="flex items-center justify-between text-xs text-brand-dark/50">
+        <div
+          className={`sticky bottom-0 bg-white border-t border-brand-gray-100 rounded-b-xl ${
+            screenSize === "mobile" ? "px-3 py-2" : "px-4 py-2"
+          }`}
+        >
+          <div
+            className={`flex items-center justify-between text-brand-dark/50 ${
+              screenSize === "mobile" ? "text-xs" : "text-xs"
+            }`}
+          >
             <span>{tasks.length} tasks</span>
             {tasks.length > 0 && (
               <span>
