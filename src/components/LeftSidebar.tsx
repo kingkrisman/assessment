@@ -1,8 +1,15 @@
 import React from "react";
+import { useTheme } from "../contexts/ThemeContext";
 
-const DashboardIcon = ({ active = false }: { active?: boolean }) => (
+const DashboardIcon = ({
+  active = false,
+  isDark = false,
+}: {
+  active?: boolean;
+  isDark?: boolean;
+}) => (
   <svg
-    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? (isDark ? "text-white" : "text-white") : isDark ? "text-white/50" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -13,9 +20,15 @@ const DashboardIcon = ({ active = false }: { active?: boolean }) => (
   </svg>
 );
 
-const UserIcon = ({ active = false }: { active?: boolean }) => (
+const UserIcon = ({
+  active = false,
+  isDark = false,
+}: {
+  active?: boolean;
+  isDark?: boolean;
+}) => (
   <svg
-    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? (isDark ? "text-white" : "text-white") : isDark ? "text-white/50" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -26,9 +39,15 @@ const UserIcon = ({ active = false }: { active?: boolean }) => (
   </svg>
 );
 
-const CalendarIcon = ({ active = false }: { active?: boolean }) => (
+const CalendarIcon = ({
+  active = false,
+  isDark = false,
+}: {
+  active?: boolean;
+  isDark?: boolean;
+}) => (
   <svg
-    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? (isDark ? "text-white" : "text-white") : isDark ? "text-white/50" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -39,9 +58,15 @@ const CalendarIcon = ({ active = false }: { active?: boolean }) => (
   </svg>
 );
 
-const ChartIcon = ({ active = false }: { active?: boolean }) => (
+const ChartIcon = ({
+  active = false,
+  isDark = false,
+}: {
+  active?: boolean;
+  isDark?: boolean;
+}) => (
   <svg
-    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? (isDark ? "text-white" : "text-white") : isDark ? "text-white/50" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -52,9 +77,15 @@ const ChartIcon = ({ active = false }: { active?: boolean }) => (
   </svg>
 );
 
-const CloudIcon = ({ active = false }: { active?: boolean }) => (
+const CloudIcon = ({
+  active = false,
+  isDark = false,
+}: {
+  active?: boolean;
+  isDark?: boolean;
+}) => (
   <svg
-    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? (isDark ? "text-white" : "text-white") : isDark ? "text-white/50" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -65,9 +96,15 @@ const CloudIcon = ({ active = false }: { active?: boolean }) => (
   </svg>
 );
 
-const MapIcon = ({ active = false }: { active?: boolean }) => (
+const MapIcon = ({
+  active = false,
+  isDark = false,
+}: {
+  active?: boolean;
+  isDark?: boolean;
+}) => (
   <svg
-    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? (isDark ? "text-white" : "text-white") : isDark ? "text-white/50" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -78,9 +115,15 @@ const MapIcon = ({ active = false }: { active?: boolean }) => (
   </svg>
 );
 
-const SettingsIcon = ({ active = false }: { active?: boolean }) => (
+const SettingsIcon = ({
+  active = false,
+  isDark = false,
+}: {
+  active?: boolean;
+  isDark?: boolean;
+}) => (
   <svg
-    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? (isDark ? "text-white" : "text-white") : isDark ? "text-white/50" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -104,25 +147,27 @@ const navItems = [
 const IconComponent = ({
   icon,
   active = false,
+  isDark = false,
 }: {
   icon: string;
   active?: boolean;
+  isDark?: boolean;
 }) => {
   switch (icon) {
     case "dashboard":
-      return <DashboardIcon active={active} />;
+      return <DashboardIcon active={active} isDark={isDark} />;
     case "user":
-      return <UserIcon active={active} />;
+      return <UserIcon active={active} isDark={isDark} />;
     case "calendar":
-      return <CalendarIcon active={active} />;
+      return <CalendarIcon active={active} isDark={isDark} />;
     case "chart":
-      return <ChartIcon active={active} />;
+      return <ChartIcon active={active} isDark={isDark} />;
     case "cloud":
-      return <CloudIcon active={active} />;
+      return <CloudIcon active={active} isDark={isDark} />;
     case "map":
-      return <MapIcon active={active} />;
+      return <MapIcon active={active} isDark={isDark} />;
     case "settings":
-      return <SettingsIcon active={active} />;
+      return <SettingsIcon active={active} isDark={isDark} />;
     default:
       return null;
   }
@@ -133,9 +178,13 @@ interface LeftSidebarProps {
 }
 
 export const LeftSidebar: React.FC<LeftSidebarProps> = ({ screenSize }) => {
+  const { isDark } = useTheme();
+
   return (
     <div
-      className={`bg-brand-dark flex flex-col h-full ${
+      className={`flex flex-col h-full ${
+        isDark ? "bg-brand-dark" : "bg-brand-dark"
+      } ${
         screenSize === "mobile"
           ? "w-80 min-w-80"
           : screenSize === "tablet"
@@ -211,7 +260,11 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({ screenSize }) => {
                   }`
             } ${item.active && screenSize === "mobile" ? "bg-white/10" : ""}`}
           >
-            <IconComponent icon={item.icon} active={item.active} />
+            <IconComponent
+              icon={item.icon}
+              active={item.active}
+              isDark={isDark}
+            />
             {screenSize === "mobile" && (
               <span
                 className={`text-sm font-medium ${
