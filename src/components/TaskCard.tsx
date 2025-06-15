@@ -77,8 +77,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           <div
             className="h-full rounded-sm"
             style={{
-              width: `${progressWidth}px`,
-              maxWidth: "100%",
+              width: progressWidth,
               backgroundColor: progressColor,
             }}
           ></div>
