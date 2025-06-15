@@ -130,7 +130,7 @@ const IconComponent = ({
 
 export const LeftSidebar = () => {
   return (
-    <div className="w-[90px] h-screen bg-brand-dark flex flex-col hidden md:flex">
+    <div className="w-[90px] h-full bg-brand-dark flex flex-col">
       {/* Top Indicators */}
       <div className="flex justify-center pt-6 pb-8">
         <div className="flex space-x-2">
