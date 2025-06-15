@@ -40,7 +40,7 @@ const getDateBadgeColor = (status: string, priority: string) => {
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   const progressColor = getProgressColor(task.progress, task.status);
-  const progressWidth = (task.progress / 100) * 280; // 280px is the full width
+  const progressWidth = `${task.progress}%`;
   const dateBadgeColor = getDateBadgeColor(task.status, task.priority);
 
   return (
