@@ -114,12 +114,37 @@
   scrollbar-color: rgba(28, 29, 34, 0.12) transparent;
 }
 
-/* Ensure the app takes full height */
-html,
-body,
-#root {
+/* CRITICAL: Ensure proper viewport height usage */
+html {
   height: 100%;
+  width: 100%;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Fix for mobile viewport height issues */
+@supports (-webkit-touch-callout: none) {
+  body {
+    height: -webkit-fill-available;
+  }
+
+  #root {
+    height: -webkit-fill-available;
+    min-height: -webkit-fill-available;
+  }
 }
 
 /* Custom animations */
@@ -386,4 +411,32 @@ body,
 
 .status-badge:hover::before {
   left: 100%;
+}
+
+/* Ensure all containers use proper height */
+.h-screen {
+  height: 100vh !important;
+}
+
+.h-full {
+  height: 100% !important;
+}
+
+/* Fix for flexbox height issues */
+.flex-1 {
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+}
+
+/* Mobile viewport fix */
+@media screen and (max-height: 700px) {
+  body {
+    min-height: 100vh;
+    height: auto;
+  }
+
+  #root {
+    min-height: 100vh;
+    height: auto;
+  }
 }
