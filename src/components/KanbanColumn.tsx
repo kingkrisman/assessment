@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Plus, MoreVertical, ArrowUp, ArrowDown, Grip } from "lucide-react";
 import { TaskCard } from "./TaskCard";
 import { Task } from "../lib/data";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface KanbanColumnProps {
   title: string;
@@ -26,6 +27,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   onCreateTask,
   screenSize,
 }) => {
+  const { isDark } = useTheme();
   const [isDragOver, setIsDragOver] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const [canScrollUp, setCanScrollUp] = useState(false);
