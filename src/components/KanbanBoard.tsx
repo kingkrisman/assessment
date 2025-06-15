@@ -20,7 +20,7 @@ export const KanbanBoard = () => {
       <SubHeader />
 
       {/* Kanban Board Content */}
-      <div className="p-8 bg-gray-50 min-h-screen">
+      <div className="p-8 bg-white min-h-screen">
         <div className="flex space-x-8 overflow-x-auto">
           {/* To Do Column */}
           <KanbanColumn
