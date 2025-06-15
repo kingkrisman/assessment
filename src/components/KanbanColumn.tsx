@@ -54,37 +54,8 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
     }
   }, [tasks]);
 
-  useEffect(() => {
-    const timer = setTimeout(checkScrollPosition, 100);
-    return () => clearTimeout(timer);
-  }, [tasks]);
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-      setIsDragOver(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-
-    const taskId = e.dataTransfer.getData("text/plain");
-    if (taskId) {
-      onMoveTask(taskId, status);
-    }
-  };
-
   const scrollToTop = () => {
-    scrollContainerRef.current?.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const scrollToBottom = () => {
@@ -94,16 +65,44 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
     });
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setIsDragOver(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+
+    const taskId = e.dataTransfer.getData("taskId");
+    if (taskId) {
+      onMoveTask(taskId, status);
+    }
+  };
+
   const getColumnStatusColor = () => {
     switch (status) {
       case "todo":
-        return "border-blue-200 bg-blue-50/30";
+        return isDark
+          ? "border-blue-500/50 bg-blue-500/10"
+          : "border-blue-200 bg-blue-50/30";
       case "inprogress":
-        return "border-orange-200 bg-orange-50/30";
+        return isDark
+          ? "border-orange-500/50 bg-orange-500/10"
+          : "border-orange-200 bg-orange-50/30";
       case "done":
-        return "border-green-200 bg-green-50/30";
+        return isDark
+          ? "border-green-500/50 bg-green-500/10"
+          : "border-green-200 bg-green-50/30";
       default:
-        return "border-brand-gray-200";
+        return isDark ? "border-dark-border" : "border-brand-gray-200";
     }
   };
 
@@ -169,10 +168,14 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
     <div className={`${getColumnWidth()} flex-shrink-0 h-full flex flex-col`}>
       {/* Column Container */}
       <div
-        className={`relative flex-1 bg-white rounded-xl border-2 border-dashed transition-all duration-200 ${
+        className={`relative flex-1 rounded-xl border-2 border-dashed transition-all duration-200 ${
+          isDark ? "bg-dark-tertiary" : "bg-white"
+        } ${
           isDragOver
-            ? `border-brand-dark shadow-lg ${getColumnStatusColor()}`
-            : "border-brand-gray-200 hover:border-brand-gray-300"
+            ? `${isDark ? "border-dark-text shadow-lg" : "border-brand-dark shadow-lg"} ${getColumnStatusColor()}`
+            : isDark
+              ? "border-dark-border hover:border-dark-text/30"
+              : "border-brand-gray-200 hover:border-brand-gray-300"
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -180,18 +183,26 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
       >
         {/* Column Header */}
         <div
-          className={`sticky top-0 z-10 bg-white rounded-t-xl border-b border-brand-gray-100 ${getHeaderSpacing()}`}
+          className={`sticky top-0 z-10 rounded-t-xl border-b ${
+            isDark
+              ? "bg-dark-tertiary border-dark-border"
+              : "bg-white border-brand-gray-100"
+          } ${getHeaderSpacing()}`}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               {/* Mobile drag handle */}
               {screenSize === "mobile" && (
-                <Grip className="w-4 h-4 text-brand-dark/30" />
+                <Grip
+                  className={`w-4 h-4 ${
+                    isDark ? "text-dark-text-muted" : "text-brand-dark/30"
+                  }`}
+                />
               )}
               <span
-                className={`font-semibold text-brand-dark/50 ${
-                  screenSize === "mobile" ? "text-sm" : "text-sm"
-                }`}
+                className={`font-semibold ${
+                  isDark ? "text-dark-text-secondary" : "text-brand-dark/50"
+                } ${screenSize === "mobile" ? "text-sm" : "text-sm"}`}
               >
                 {title} ({count})
               </span>
@@ -211,37 +222,61 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             <div className="flex items-center space-x-2">
               {/* Column Menu - Desktop/Tablet only */}
               {screenSize !== "mobile" && (
-                <button className="p-1 hover:bg-brand-gray-100 rounded-md transition-colors">
-                  <MoreVertical className="w-4 h-4 text-brand-dark/40" />
+                <button
+                  className={`p-1 rounded-md transition-colors ${
+                    isDark ? "hover:bg-dark-accent" : "hover:bg-brand-gray-100"
+                  }`}
+                >
+                  <MoreVertical
+                    className={`w-4 h-4 ${
+                      isDark ? "text-dark-text-secondary" : "text-brand-dark/40"
+                    }`}
+                  />
                 </button>
               )}
 
               {/* Add Task Button */}
               <button
                 onClick={onCreateTask}
-                className={`flex items-center space-x-2 hover:bg-brand-gray-50 rounded-lg transition-colors group ${
-                  screenSize === "mobile" ? "px-2 py-1" : "px-2 py-1"
-                }`}
+                className={`flex items-center space-x-2 rounded-lg transition-colors group ${
+                  isDark ? "hover:bg-dark-accent" : "hover:bg-brand-gray-50"
+                } ${screenSize === "mobile" ? "px-2 py-1" : "px-2 py-1"}`}
               >
                 <div
-                  className={`rounded-full bg-brand-gray-200 flex items-center justify-center group-hover:bg-brand-dark transition-colors ${
-                    screenSize === "mobile" ? "w-4 h-4" : "w-[18px] h-[18px]"
-                  }`}
+                  className={`rounded-full flex items-center justify-center transition-colors ${
+                    isDark
+                      ? "bg-dark-border group-hover:bg-dark-text"
+                      : "bg-brand-gray-200 group-hover:bg-brand-dark"
+                  } ${screenSize === "mobile" ? "w-4 h-4" : "w-[18px] h-[18px]"}`}
                 >
                   <Plus
-                    className={`text-brand-dark/40 group-hover:text-white ${
-                      screenSize === "mobile" ? "w-2.5 h-2.5" : "w-3 h-3"
-                    }`}
+                    className={`${
+                      isDark
+                        ? "text-dark-text-secondary group-hover:text-dark-primary"
+                        : "text-brand-dark/40 group-hover:text-white"
+                    } ${screenSize === "mobile" ? "w-2.5 h-2.5" : "w-3 h-3"}`}
                     strokeWidth={2}
                   />
                 </div>
                 {screenSize === "desktop" && (
-                  <span className="text-sm font-semibold text-brand-dark group-hover:text-brand-dark/80">
+                  <span
+                    className={`text-sm font-semibold transition-colors ${
+                      isDark
+                        ? "text-dark-text group-hover:text-dark-text/80"
+                        : "text-brand-dark group-hover:text-brand-dark/80"
+                    }`}
+                  >
                     Add new task
                   </span>
                 )}
                 {screenSize === "tablet" && (
-                  <span className="text-xs font-medium text-brand-dark group-hover:text-brand-dark/80">
+                  <span
+                    className={`text-xs font-medium transition-colors ${
+                      isDark
+                        ? "text-dark-text group-hover:text-dark-text/80"
+                        : "text-brand-dark group-hover:text-brand-dark/80"
+                    }`}
+                  >
                     Add
                   </span>
                 )}
@@ -252,7 +287,11 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           {/* Progress Indicator for Column */}
           {count > 0 && (
             <div className={`${screenSize === "mobile" ? "mt-2" : "mt-3"}`}>
-              <div className="w-full h-1 bg-brand-gray-200 rounded-full overflow-hidden">
+              <div
+                className={`w-full h-1 rounded-full overflow-hidden ${
+                  isDark ? "bg-dark-border" : "bg-brand-gray-200"
+                }`}
+              >
                 <div
                   className={`h-full transition-all duration-500 ${
                     status === "todo"
@@ -276,17 +315,33 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             {canScrollUp && (
               <button
                 onClick={scrollToTop}
-                className="absolute top-16 right-2 z-20 w-8 h-8 bg-white shadow-md rounded-full flex items-center justify-center hover:bg-brand-gray-50 transition-colors"
+                className={`absolute top-16 right-2 z-20 w-8 h-8 shadow-md rounded-full flex items-center justify-center transition-colors ${
+                  isDark
+                    ? "bg-dark-card hover:bg-dark-border"
+                    : "bg-white hover:bg-brand-gray-50"
+                }`}
               >
-                <ArrowUp className="w-4 h-4 text-brand-dark/60" />
+                <ArrowUp
+                  className={`w-4 h-4 ${
+                    isDark ? "text-dark-text-secondary" : "text-brand-dark/60"
+                  }`}
+                />
               </button>
             )}
             {canScrollDown && (
               <button
                 onClick={scrollToBottom}
-                className="absolute bottom-4 right-2 z-20 w-8 h-8 bg-white shadow-md rounded-full flex items-center justify-center hover:bg-brand-gray-50 transition-colors"
+                className={`absolute bottom-4 right-2 z-20 w-8 h-8 shadow-md rounded-full flex items-center justify-center transition-colors ${
+                  isDark
+                    ? "bg-dark-card hover:bg-dark-border"
+                    : "bg-white hover:bg-brand-gray-50"
+                }`}
               >
-                <ArrowDown className="w-4 h-4 text-brand-dark/60" />
+                <ArrowDown
+                  className={`w-4 h-4 ${
+                    isDark ? "text-dark-text-secondary" : "text-brand-dark/60"
+                  }`}
+                />
               </button>
             )}
           </>
@@ -298,21 +353,20 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           className={`flex-1 overflow-y-auto overflow-x-hidden ${getColumnPadding()} pb-4`}
           style={{
             scrollbarWidth: "thin",
-            scrollbarColor: "#E5E7EB #F9FAFB",
+            scrollbarColor: isDark
+              ? "rgba(255, 255, 255, 0.2) transparent"
+              : "rgba(28, 29, 34, 0.12) transparent",
           }}
         >
+          {/* Task Cards */}
           <div
-            className={`space-y-3 pt-2 ${
-              screenSize === "mobile" ? "space-y-3" : "space-y-4"
-            }`}
+            className={`space-y-3 ${screenSize === "mobile" ? "space-y-2" : ""}`}
           >
             {tasks.map((task, index) => (
               <div
                 key={task.id}
-                className="transform transition-all duration-200 hover:scale-[1.02]"
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                }}
+                className="animate-task-enter"
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 <TaskCard
                   task={task}
@@ -324,113 +378,59 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
               </div>
             ))}
 
-            {/* Empty State */}
+            {/* Empty State with Drag Target */}
             {tasks.length === 0 && (
               <div
-                className={`space-y-3 ${
-                  screenSize === "mobile" ? "space-y-3" : "space-y-4"
+                className={`h-full min-h-[120px] flex flex-col items-center justify-center rounded-lg border-2 border-dashed transition-all duration-300 ${
+                  isDragOver
+                    ? isDark
+                      ? "border-dark-text bg-dark-accent"
+                      : "border-brand-dark bg-brand-gray-50"
+                    : isDark
+                      ? "border-dark-border-light bg-dark-accent-light"
+                      : "border-brand-gray-200 bg-brand-gray-50/50"
+                } hover:${
+                  isDark
+                    ? "border-dark-border bg-dark-accent"
+                    : "border-brand-gray-300 bg-brand-gray-100/50"
                 }`}
               >
-                {/* Primary Empty State */}
-                <div
-                  className={`w-full bg-white rounded-xl border-2 border-dashed transition-all duration-200 flex items-center justify-center group hover:border-brand-gray-400 ${
-                    isDragOver
-                      ? "border-brand-dark bg-brand-gray-50"
-                      : "border-brand-gray-200"
-                  } ${
-                    screenSize === "mobile"
-                      ? "h-[140px]"
-                      : screenSize === "tablet"
-                        ? "h-[160px]"
-                        : "h-[178px]"
-                  }`}
-                >
-                  <div className="text-center">
-                    <div
-                      className={`mx-auto mb-3 rounded-full flex items-center justify-center transition-colors ${
-                        isDragOver
-                          ? "bg-brand-dark text-white"
-                          : "bg-brand-gray-100 text-brand-dark/40 group-hover:bg-brand-gray-200"
-                      } ${screenSize === "mobile" ? "w-10 h-10" : "w-12 h-12"}`}
-                    >
-                      <Plus
-                        className={`${
-                          screenSize === "mobile" ? "w-5 h-5" : "w-6 h-6"
-                        }`}
-                      />
-                    </div>
-                    <span
-                      className={`font-bold text-brand-dark/50 group-hover:text-brand-dark/70 transition-colors ${
-                        screenSize === "mobile" ? "text-sm" : "text-base"
+                <div className="text-center p-6">
+                  <div
+                    className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto ${
+                      isDark ? "bg-dark-border" : "bg-brand-gray-200"
+                    }`}
+                  >
+                    <Plus
+                      className={`w-6 h-6 ${
+                        isDark
+                          ? "text-dark-text-secondary"
+                          : "text-brand-dark/40"
+                      }`}
+                    />
+                  </div>
+                  <p
+                    className={`${
+                      screenSize === "mobile" ? "text-sm" : "text-base"
+                    } font-medium ${
+                      isDark ? "text-dark-text-secondary" : "text-brand-dark/50"
+                    } mb-2`}
+                  >
+                    {getEmptyStateMessage()}
+                  </p>
+                  {screenSize !== "mobile" && (
+                    <p
+                      className={`text-xs ${
+                        isDark ? "text-dark-text-muted" : "text-brand-dark/30"
                       }`}
                     >
-                      {getEmptyStateMessage()}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Additional Placeholder Spaces - Desktop/Tablet only */}
-                {screenSize !== "mobile" &&
-                  Array.from({ length: screenSize === "tablet" ? 1 : 2 }).map(
-                    (_, index) => (
-                      <div
-                        key={index}
-                        className={`w-full bg-white rounded-xl border-2 border-dashed border-brand-gray-100 flex items-center justify-center opacity-60 ${
-                          screenSize === "tablet" ? "h-[160px]" : "h-[178px]"
-                        }`}
-                      >
-                        <span
-                          className={`font-medium text-brand-dark/30 ${
-                            screenSize === "tablet" ? "text-xs" : "text-sm"
-                          }`}
-                        >
-                          Drop zone {index + 2}
-                        </span>
-                      </div>
-                    ),
+                      {status === "done"
+                        ? "Tasks will appear here when completed"
+                        : "Click the + button to add a task"}
+                    </p>
                   )}
+                </div>
               </div>
-            )}
-
-            {/* Loading skeleton for new tasks */}
-            {isDragOver && tasks.length > 0 && (
-              <div
-                className={`w-full bg-brand-gray-50 rounded-xl border-2 border-dashed border-brand-dark animate-pulse flex items-center justify-center ${
-                  screenSize === "mobile"
-                    ? "h-[140px]"
-                    : screenSize === "tablet"
-                      ? "h-[160px]"
-                      : "h-[178px]"
-                }`}
-              >
-                <span
-                  className={`font-bold text-brand-dark/70 ${
-                    screenSize === "mobile" ? "text-sm" : "text-base"
-                  }`}
-                >
-                  Drop here to move task
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Task Count Footer */}
-        <div
-          className={`sticky bottom-0 bg-white border-t border-brand-gray-100 rounded-b-xl ${
-            screenSize === "mobile" ? "px-3 py-2" : "px-4 py-2"
-          }`}
-        >
-          <div
-            className={`flex items-center justify-between text-brand-dark/50 ${
-              screenSize === "mobile" ? "text-xs" : "text-xs"
-            }`}
-          >
-            <span>{tasks.length} tasks</span>
-            {tasks.length > 0 && (
-              <span>
-                {tasks.filter((task) => task.progress === 100).length} completed
-              </span>
             )}
           </div>
         </div>
