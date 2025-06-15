@@ -3,7 +3,7 @@ import { Search, Bell, Calendar, MoreHorizontal, Plus } from "lucide-react";
 
 export const Header = () => {
   return (
-    <div className="bg-white h-[94px] flex items-center justify-between px-8 border-b border-brand-gray-200">
+    <div className="bg-white h-[94px] flex items-center justify-between px-4 lg:px-8 border-b border-brand-gray-200">
       <div>
         <h1 className="text-[20px] font-bold text-brand-dark leading-none">
           Welcome back, Vincent 👋
