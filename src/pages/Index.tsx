@@ -3,8 +3,10 @@ import { LeftSidebar } from "../components/LeftSidebar";
 import { Sidebar } from "../components/Sidebar";
 import { KanbanBoard } from "../components/KanbanBoard";
 import { Menu, X, Settings, Folder } from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
 
 export default function Index() {
+  const { isDark } = useTheme();
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [rightSidebarOpen, setRightSidebarOpen] = useState(false);
   const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">(
@@ -63,15 +65,31 @@ export default function Index() {
   }, [leftSidebarOpen, rightSidebarOpen, screenSize]);
 
   return (
-    <div className="flex w-full h-screen min-h-screen bg-white relative">
+    <div
+      className={`flex w-full h-screen min-h-screen relative ${
+        isDark ? "bg-dark-primary" : "bg-white"
+      }`}
+    >
       {/* Mobile Navigation Bar */}
       {screenSize === "mobile" && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-brand-gray-200 px-4 py-3 flex items-center justify-between">
+        <div
+          className={`fixed top-0 left-0 right-0 z-50 px-4 py-3 flex items-center justify-between border-b ${
+            isDark
+              ? "bg-dark-primary border-dark-border"
+              : "bg-white border-brand-gray-200"
+          }`}
+        >
           <button
             onClick={() => setLeftSidebarOpen(true)}
-            className="sidebar-toggle flex items-center justify-center w-10 h-10 rounded-lg bg-brand-gray-100 hover:bg-brand-gray-200 transition-colors"
+            className={`sidebar-toggle flex items-center justify-center w-10 h-10 rounded-lg transition-colors ${
+              isDark
+                ? "bg-dark-accent hover:bg-dark-border"
+                : "bg-brand-gray-100 hover:bg-brand-gray-200"
+            }`}
           >
-            <Menu className="w-5 h-5 text-brand-dark" />
+            <Menu
+              className={`w-5 h-5 ${isDark ? "text-dark-text" : "text-brand-dark"}`}
+            />
           </button>
 
           <div className="flex items-center space-x-2">
@@ -87,14 +105,24 @@ export default function Index() {
                 />
               </svg>
             </div>
-            <span className="text-lg font-bold text-brand-dark">TaskFlow</span>
+            <span
+              className={`text-lg font-bold ${isDark ? "text-dark-text" : "text-brand-dark"}`}
+            >
+              TaskFlow
+            </span>
           </div>
 
           <button
             onClick={() => setRightSidebarOpen(true)}
-            className="sidebar-toggle flex items-center justify-center w-10 h-10 rounded-lg bg-brand-gray-100 hover:bg-brand-gray-200 transition-colors"
+            className={`sidebar-toggle flex items-center justify-center w-10 h-10 rounded-lg transition-colors ${
+              isDark
+                ? "bg-dark-accent hover:bg-dark-border"
+                : "bg-brand-gray-100 hover:bg-brand-gray-200"
+            }`}
           >
-            <Folder className="w-5 h-5 text-brand-dark" />
+            <Folder
+              className={`w-5 h-5 ${isDark ? "text-dark-text" : "text-brand-dark"}`}
+            />
           </button>
         </div>
       )}
@@ -104,14 +132,24 @@ export default function Index() {
         <>
           <button
             onClick={() => setLeftSidebarOpen(true)}
-            className="sidebar-toggle fixed top-4 left-4 z-50 bg-white shadow-lg rounded-lg p-2 border border-brand-gray-200 hover:bg-brand-gray-50 transition-colors"
+            className={`sidebar-toggle fixed top-4 left-4 z-50 shadow-lg rounded-lg p-2 border transition-colors ${
+              isDark
+                ? "bg-dark-card border-dark-border hover:bg-dark-tertiary"
+                : "bg-white border-brand-gray-200 hover:bg-brand-gray-50"
+            }`}
           >
-            <Menu className="w-5 h-5 text-brand-dark" />
+            <Menu
+              className={`w-5 h-5 ${isDark ? "text-dark-text" : "text-brand-dark"}`}
+            />
           </button>
 
           <button
             onClick={() => setRightSidebarOpen(true)}
-            className="sidebar-toggle fixed top-4 left-20 z-50 bg-white shadow-lg rounded-lg px-3 py-2 border border-brand-gray-200 text-sm font-medium text-brand-dark hover:bg-brand-gray-50 transition-colors"
+            className={`sidebar-toggle fixed top-4 left-20 z-50 shadow-lg rounded-lg px-3 py-2 border text-sm font-medium transition-colors ${
+              isDark
+                ? "bg-dark-card border-dark-border text-dark-text hover:bg-dark-tertiary"
+                : "bg-white border-brand-gray-200 text-brand-dark hover:bg-brand-gray-50"
+            }`}
           >
             Projects
           </button>
