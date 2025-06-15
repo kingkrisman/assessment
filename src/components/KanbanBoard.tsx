@@ -17,12 +17,14 @@ import {
   Grid3X3,
   List,
 } from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface KanbanBoardProps {
   screenSize: "mobile" | "tablet" | "desktop";
 }
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
+  const { isDark } = useTheme();
   const {
     tasksByStatus,
     taskCounts,
@@ -196,41 +198,71 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
 
   return (
     <div
-      className={`flex flex-col h-full bg-white transition-all duration-300 ${isFullscreen ? "fixed inset-0 z-50" : ""}`}
+      className={`flex flex-col h-full transition-all duration-300 ${
+        isDark ? "bg-dark-primary" : "bg-white"
+      } ${isFullscreen ? "fixed inset-0 z-50" : ""}`}
     >
       {/* Header - Desktop/Tablet only */}
       {screenSize !== "mobile" && <Header screenSize={screenSize} />}
 
       {/* Enhanced Sub Header with responsive controls */}
-      <div className="border-b border-brand-gray-200 bg-white">
+      <div
+        className={`border-b ${
+          isDark
+            ? "border-dark-border bg-dark-primary"
+            : "border-brand-gray-200 bg-white"
+        }`}
+      >
         {screenSize !== "mobile" && (
           <SubHeader onCreateTask={handleCreateTask} screenSize={screenSize} />
         )}
 
         {/* Mobile Header */}
         {screenSize === "mobile" && (
-          <div className="px-4 py-3 border-b border-brand-gray-100">
+          <div
+            className={`px-4 py-3 border-b ${
+              isDark ? "border-dark-border" : "border-brand-gray-100"
+            }`}
+          >
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-bold text-brand-dark">Board View</h1>
+              <h1
+                className={`text-xl font-bold ${
+                  isDark ? "text-dark-text" : "text-brand-dark"
+                }`}
+              >
+                Board View
+              </h1>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() =>
                     setViewMode(viewMode === "kanban" ? "list" : "kanban")
                   }
-                  className="p-2 rounded-lg bg-brand-gray-100 hover:bg-brand-gray-200 transition-colors"
+                  className={`p-2 rounded-lg transition-colors ${
+                    isDark
+                      ? "bg-dark-accent hover:bg-dark-border"
+                      : "bg-brand-gray-100 hover:bg-brand-gray-200"
+                  }`}
                 >
                   {viewMode === "kanban" ? (
-                    <List className="w-4 h-4 text-brand-dark" />
+                    <List
+                      className={`w-4 h-4 ${isDark ? "text-dark-text" : "text-brand-dark"}`}
+                    />
                   ) : (
-                    <Grid3X3 className="w-4 h-4 text-brand-dark" />
+                    <Grid3X3
+                      className={`w-4 h-4 ${isDark ? "text-dark-text" : "text-brand-dark"}`}
+                    />
                   )}
                 </button>
                 <button
                   onClick={() => setShowFilters(!showFilters)}
                   className={`p-2 rounded-lg transition-colors ${
                     showFilters
-                      ? "bg-brand-dark text-white"
-                      : "bg-brand-gray-100 text-brand-dark hover:bg-brand-gray-200"
+                      ? isDark
+                        ? "bg-dark-text text-dark-primary"
+                        : "bg-brand-dark text-white"
+                      : isDark
+                        ? "bg-dark-accent text-dark-text hover:bg-dark-border"
+                        : "bg-brand-gray-100 text-brand-dark hover:bg-brand-gray-200"
                   }`}
                 >
                   <Filter className="w-4 h-4" />
