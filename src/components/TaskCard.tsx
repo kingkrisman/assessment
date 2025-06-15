@@ -1,9 +1,19 @@
-import React from "react";
-import { MoreHorizontal, MessageCircle, Paperclip } from "lucide-react";
+import React, { useState } from "react";
+import {
+  MoreHorizontal,
+  MessageCircle,
+  Paperclip,
+  Edit2,
+  Trash2,
+  ArrowRight,
+} from "lucide-react";
 import { Task } from "../lib/data";
 
 interface TaskCardProps {
   task: Task;
+  onEdit: (task: Task) => void;
+  onDelete: (taskId: string) => void;
+  onMove: (taskId: string, newStatus: Task["status"]) => void;
 }
 
 const ProgressIcon = ({ className }: { className?: string }) => (
