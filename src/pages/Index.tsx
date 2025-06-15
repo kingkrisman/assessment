@@ -5,7 +5,7 @@ import { KanbanBoard } from "../components/KanbanBoard";
 
 export default function Index() {
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div className="flex min-h-screen bg-white">
       {/* Left Navigation Sidebar */}
       <LeftSidebar />
 
@@ -13,7 +13,9 @@ export default function Index() {
       <Sidebar />
 
       {/* Main Kanban Board Area */}
-      <KanbanBoard />
+      <div className="flex-1 min-w-0">
+        <KanbanBoard />
+      </div>
     </div>
   );
 }
