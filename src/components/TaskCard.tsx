@@ -48,13 +48,40 @@ const getDateBadgeColor = (status: string, priority: string) => {
   return "bg-brand-blue/10 text-brand-blue";
 };
 
-export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+export const TaskCard: React.FC<TaskCardProps> = ({
+  task,
+  onEdit,
+  onDelete,
+  onMove,
+}) => {
+  const [showMenu, setShowMenu] = useState(false);
   const progressColor = getProgressColor(task.progress, task.status);
   const progressWidth = `${task.progress}%`;
   const dateBadgeColor = getDateBadgeColor(task.status, task.priority);
 
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData("text/plain", task.id);
+  };
+
+  const getNextStatus = (): Task["status"] | null => {
+    switch (task.status) {
+      case "todo":
+        return "inprogress";
+      case "inprogress":
+        return "done";
+      default:
+        return null;
+    }
+  };
+
+  const nextStatus = getNextStatus();
+
   return (
-    <div className="w-[320px] bg-white rounded-xl border-2 border-brand-gray-100 p-5 mb-6">
+    <div
+      className="w-full max-w-[320px] bg-white rounded-xl border-2 border-brand-gray-100 p-5 mb-6 cursor-move hover:shadow-lg transition-shadow relative group"
+      draggable
+      onDragStart={handleDragStart}
+    >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
