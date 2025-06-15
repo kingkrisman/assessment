@@ -284,8 +284,12 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
                   onClick={() => setShowFilters(!showFilters)}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
                     showFilters
-                      ? "bg-brand-dark text-white"
-                      : "bg-brand-gray-100 text-brand-dark hover:bg-brand-gray-200"
+                      ? isDark
+                        ? "bg-dark-text text-dark-primary"
+                        : "bg-brand-dark text-white"
+                      : isDark
+                        ? "bg-dark-accent text-dark-text hover:bg-dark-border"
+                        : "bg-brand-gray-100 text-brand-dark hover:bg-brand-gray-200"
                   }`}
                 >
                   <Filter className="w-4 h-4" />
@@ -296,7 +300,11 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
 
                 <button
                   onClick={() => setIsFullscreen(!isFullscreen)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-brand-gray-100 text-brand-dark hover:bg-brand-gray-200 transition-colors"
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                    isDark
+                      ? "bg-dark-accent text-dark-text hover:bg-dark-border"
+                      : "bg-brand-gray-100 text-brand-dark hover:bg-brand-gray-200"
+                  }`}
                 >
                   {isFullscreen ? (
                     <Minimize2 className="w-4 h-4" />
@@ -336,7 +344,11 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
               </div>
 
               {/* Quick Stats */}
-              <div className="flex items-center space-x-2 lg:space-x-4 text-xs lg:text-sm text-brand-dark/60">
+              <div
+                className={`flex items-center space-x-2 lg:space-x-4 text-xs lg:text-sm ${
+                  isDark ? "text-dark-text-secondary" : "text-brand-dark/60"
+                }`}
+              >
                 <span>{filteredTasks.length} total tasks</span>
                 <span>•</span>
                 <span>{taskCounts.done} completed</span>
@@ -354,7 +366,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
 
       {/* Search and Filter */}
       {showFilters && (
-        <div className="border-b border-brand-gray-100 bg-brand-gray-50">
+        <div
+          className={`border-b ${
+            isDark
+              ? "border-dark-border bg-dark-accent-light"
+              : "border-brand-gray-100 bg-brand-gray-50"
+          }`}
+        >
           <div className={`p-4 lg:p-6 ${screenSize === "mobile" ? "p-3" : ""}`}>
             <SearchFilter
               onSearch={setSearchQuery}
@@ -368,14 +386,26 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
 
       {/* Mobile Column Navigation */}
       {screenSize === "mobile" && viewMode === "kanban" && (
-        <div className="border-b border-brand-gray-200 bg-white px-4 py-3">
+        <div
+          className={`border-b px-4 py-3 ${
+            isDark
+              ? "border-dark-border bg-dark-primary"
+              : "border-brand-gray-200 bg-white"
+          }`}
+        >
           <div className="flex items-center justify-between">
             <button
               onClick={prevColumn}
               disabled={currentColumnIndex === 0}
-              className="p-2 rounded-lg bg-brand-gray-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-gray-200 transition-colors"
+              className={`p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
+                isDark
+                  ? "bg-dark-accent hover:bg-dark-border"
+                  : "bg-brand-gray-100 hover:bg-brand-gray-200"
+              }`}
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft
+                className={`w-4 h-4 ${isDark ? "text-dark-text" : "text-brand-dark"}`}
+              />
             </button>
 
             <div className="flex items-center space-x-2">
@@ -393,10 +423,18 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
                 ))}
               </div>
               <div className="text-center ml-4">
-                <span className="text-lg font-bold text-brand-dark">
+                <span
+                  className={`text-lg font-bold ${
+                    isDark ? "text-dark-text" : "text-brand-dark"
+                  }`}
+                >
                   {visibleColumns[currentColumnIndex]?.title}
                 </span>
-                <span className="ml-2 text-sm text-brand-dark/60">
+                <span
+                  className={`ml-2 text-sm ${
+                    isDark ? "text-dark-text-secondary" : "text-brand-dark/60"
+                  }`}
+                >
                   ({visibleColumns[currentColumnIndex]?.count})
                 </span>
               </div>
@@ -405,9 +443,15 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
             <button
               onClick={nextColumn}
               disabled={currentColumnIndex === visibleColumns.length - 1}
-              className="p-2 rounded-lg bg-brand-gray-100 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-gray-200 transition-colors"
+              className={`p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
+                isDark
+                  ? "bg-dark-accent hover:bg-dark-border"
+                  : "bg-brand-gray-100 hover:bg-brand-gray-200"
+              }`}
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight
+                className={`w-4 h-4 ${isDark ? "text-dark-text" : "text-brand-dark"}`}
+              />
             </button>
           </div>
         </div>
@@ -536,7 +580,11 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
       {/* Floating Action Button for Mobile */}
       <button
         onClick={handleCreateTask}
-        className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-brand-dark text-white rounded-full shadow-lg flex items-center justify-center z-40 hover:bg-brand-dark/90 transition-colors active:scale-95"
+        className={`md:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg flex items-center justify-center z-40 transition-colors active:scale-95 ${
+          isDark
+            ? "bg-dark-text text-dark-primary hover:bg-dark-text/90"
+            : "bg-brand-dark text-white hover:bg-brand-dark/90"
+        }`}
       >
         <Plus className="w-6 h-6" />
       </button>
