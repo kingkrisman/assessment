@@ -2,7 +2,7 @@ import React from "react";
 
 const DashboardIcon = ({ active = false }: { active?: boolean }) => (
   <svg
-    className={`w-[22px] h-[22px] ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -15,7 +15,7 @@ const DashboardIcon = ({ active = false }: { active?: boolean }) => (
 
 const UserIcon = ({ active = false }: { active?: boolean }) => (
   <svg
-    className={`w-[22px] h-[22px] ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -28,7 +28,7 @@ const UserIcon = ({ active = false }: { active?: boolean }) => (
 
 const CalendarIcon = ({ active = false }: { active?: boolean }) => (
   <svg
-    className={`w-[22px] h-[22px] ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -41,7 +41,7 @@ const CalendarIcon = ({ active = false }: { active?: boolean }) => (
 
 const ChartIcon = ({ active = false }: { active?: boolean }) => (
   <svg
-    className={`w-[22px] h-[22px] ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -54,7 +54,7 @@ const ChartIcon = ({ active = false }: { active?: boolean }) => (
 
 const CloudIcon = ({ active = false }: { active?: boolean }) => (
   <svg
-    className={`w-[22px] h-[22px] ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -67,7 +67,7 @@ const CloudIcon = ({ active = false }: { active?: boolean }) => (
 
 const MapIcon = ({ active = false }: { active?: boolean }) => (
   <svg
-    className={`w-[22px] h-[22px] ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -80,7 +80,7 @@ const MapIcon = ({ active = false }: { active?: boolean }) => (
 
 const SettingsIcon = ({ active = false }: { active?: boolean }) => (
   <svg
-    className={`w-[22px] h-[22px] ${active ? "text-white" : "text-white/50"}`}
+    className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-white" : "text-white/50"}`}
     viewBox="0 0 22 22"
     fill="none"
   >
@@ -92,13 +92,13 @@ const SettingsIcon = ({ active = false }: { active?: boolean }) => (
 );
 
 const navItems = [
-  { icon: "dashboard", active: true },
-  { icon: "user" },
-  { icon: "calendar" },
-  { icon: "chart" },
-  { icon: "cloud" },
-  { icon: "map" },
-  { icon: "settings" },
+  { icon: "dashboard", active: true, label: "Dashboard" },
+  { icon: "user", label: "Users" },
+  { icon: "calendar", label: "Calendar" },
+  { icon: "chart", label: "Analytics" },
+  { icon: "cloud", label: "Cloud" },
+  { icon: "map", label: "Maps" },
+  { icon: "settings", label: "Settings" },
 ];
 
 const IconComponent = ({
@@ -128,57 +128,131 @@ const IconComponent = ({
   }
 };
 
-export const LeftSidebar = () => {
+interface LeftSidebarProps {
+  screenSize: "mobile" | "tablet" | "desktop";
+}
+
+export const LeftSidebar: React.FC<LeftSidebarProps> = ({ screenSize }) => {
   return (
-    <div className="w-[90px] h-full bg-brand-dark flex flex-col">
-      {/* Top Indicators */}
-      <div className="flex justify-center pt-6 pb-8">
-        <div className="flex space-x-2">
-          <div className="w-1 h-1 bg-white rounded-full"></div>
-          <div className="w-1 h-1 bg-white/40 rounded-full"></div>
-          <div className="w-1 h-1 bg-white/20 rounded-full"></div>
-        </div>
-      </div>
-
-      {/* Logo */}
-      <div className="flex justify-center mb-12">
-        <svg width="24" height="26" viewBox="0 0 24 26" fill="none">
-          <path
-            d="M24 8.88887L14 4V5.46663L22.5 9.62219L14 13.7777V26L24 21.1111V8.88887Z"
-            fill="white"
-          />
-          <path
-            d="M0 17.1111L10 22V20.5334L1.49996 16.3778L10 12.2223V0L0 4.88888V17.1111Z"
-            fill="white"
-          />
-        </svg>
-      </div>
-
-      {/* Navigation Icons */}
-      <div className="flex-1 flex flex-col items-center space-y-8">
-        {navItems.map((item, index) => (
-          <div
-            key={index}
-            className={`w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-colors ${
-              item.active ? "bg-white/10" : ""
-            }`}
-          >
-            <IconComponent icon={item.icon} active={item.active} />
+    <div
+      className={`bg-brand-dark flex flex-col h-full ${
+        screenSize === "mobile"
+          ? "w-80 min-w-80"
+          : screenSize === "tablet"
+            ? "w-20 min-w-20"
+            : "w-[90px] min-w-[90px]"
+      }`}
+    >
+      {/* Mobile Header */}
+      {screenSize === "mobile" && (
+        <div className="px-6 py-4 border-b border-white/10">
+          <div className="flex items-center space-x-3">
+            <svg width="32" height="36" viewBox="0 0 24 26" fill="none">
+              <path
+                d="M24 8.88887L14 4V5.46663L22.5 9.62219L14 13.7777V26L24 21.1111V8.88887Z"
+                fill="white"
+              />
+              <path
+                d="M0 17.1111L10 22V20.5334L1.49996 16.3778L10 12.2223V0L0 4.88888V17.1111Z"
+                fill="white"
+              />
+            </svg>
+            <div>
+              <h1 className="text-xl font-bold text-white">TaskFlow</h1>
+              <p className="text-sm text-white/60">Project Management</p>
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
-      {/* Bottom Icon */}
-      <div className="pb-14 flex justify-center">
-        <div className="w-[22px] h-[22px] opacity-50">
-          <svg viewBox="0 0 22 22" fill="none">
+      {/* Top Indicators (Desktop/Tablet only) */}
+      {screenSize !== "mobile" && (
+        <div className="flex justify-center pt-6 pb-8">
+          <div className="flex space-x-2">
+            <div className="w-1 h-1 bg-white rounded-full"></div>
+            <div className="w-1 h-1 bg-white/40 rounded-full"></div>
+            <div className="w-1 h-1 bg-white/20 rounded-full"></div>
+          </div>
+        </div>
+      )}
+
+      {/* Logo (Desktop/Tablet only) */}
+      {screenSize !== "mobile" && (
+        <div className="flex justify-center mb-12">
+          <svg width="24" height="26" viewBox="0 0 24 26" fill="none">
             <path
-              d="M11 1.83398C6.16751 1.83398 2.25 5.75149 2.25 10.584C2.25 15.4165 6.16751 19.334 11 19.334C15.8325 19.334 19.75 15.4165 19.75 10.584C19.75 5.75149 15.8325 1.83398 11 1.83398ZM4.08333 10.584C4.08333 6.76402 7.17999 3.66732 11 3.66732C14.82 3.66732 17.9167 6.76402 17.9167 10.584C17.9167 14.404 14.82 17.5007 11 17.5007C7.17999 17.5007 4.08333 14.404 4.08333 10.584ZM11 6.41732C11.5063 6.41732 11.9167 6.82772 11.9167 7.33398V10.584C11.9167 11.0903 11.5063 11.5007 11 11.5007C10.4937 11.5007 10.0833 11.0903 10.0833 10.584V7.33398C10.0833 6.82772 10.4937 6.41732 11 6.41732ZM11 12.834C11.5063 12.834 11.9167 13.2444 11.9167 13.7507C11.9167 14.2569 11.5063 14.6673 11 14.6673C10.4937 14.6673 10.0833 14.2569 10.0833 13.7507C10.0833 13.2444 10.4937 12.834 11 12.834Z"
+              d="M24 8.88887L14 4V5.46663L22.5 9.62219L14 13.7777V26L24 21.1111V8.88887Z"
+              fill="white"
+            />
+            <path
+              d="M0 17.1111L10 22V20.5334L1.49996 16.3778L10 12.2223V0L0 4.88888V17.1111Z"
               fill="white"
             />
           </svg>
         </div>
+      )}
+
+      {/* Navigation Icons */}
+      <div
+        className={`flex-1 flex flex-col ${
+          screenSize === "mobile"
+            ? "px-4 space-y-2"
+            : "items-center space-y-6 sm:space-y-8"
+        }`}
+      >
+        {navItems.map((item, index) => (
+          <div
+            key={index}
+            className={`${
+              screenSize === "mobile"
+                ? "flex items-center space-x-4 px-4 py-3 rounded-xl cursor-pointer transition-colors hover:bg-white/10"
+                : `w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center cursor-pointer transition-colors ${
+                    item.active ? "bg-white/10" : "hover:bg-white/5"
+                  }`
+            } ${item.active && screenSize === "mobile" ? "bg-white/10" : ""}`}
+          >
+            <IconComponent icon={item.icon} active={item.active} />
+            {screenSize === "mobile" && (
+              <span
+                className={`text-sm font-medium ${
+                  item.active ? "text-white" : "text-white/70"
+                }`}
+              >
+                {item.label}
+              </span>
+            )}
+          </div>
+        ))}
       </div>
+
+      {/* Mobile User Profile */}
+      {screenSize === "mobile" && (
+        <div className="px-6 py-4 border-t border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-bold">V</span>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-white">Vincent</p>
+              <p className="text-xs text-white/60">Admin</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Icon (Desktop/Tablet only) */}
+      {screenSize !== "mobile" && (
+        <div className="pb-12 sm:pb-14 flex justify-center">
+          <div className="w-5 h-5 sm:w-6 sm:h-6 opacity-50">
+            <svg viewBox="0 0 22 22" fill="none">
+              <path
+                d="M11 1.83398C6.16751 1.83398 2.25 5.75149 2.25 10.584C2.25 15.4165 6.16751 19.334 11 19.334C15.8325 19.334 19.75 15.4165 19.75 10.584C19.75 5.75149 15.8325 1.83398 11 1.83398ZM4.08333 10.584C4.08333 6.76402 7.17999 3.66732 11 3.66732C14.82 3.66732 17.9167 6.76402 17.9167 10.584C17.9167 14.404 14.82 17.5007 11 17.5007C7.17999 17.5007 4.08333 14.404 4.08333 10.584ZM11 6.41732C11.5063 6.41732 11.9167 6.82772 11.9167 7.33398V10.584C11.9167 11.0903 11.5063 11.5007 11 11.5007C10.4937 11.5007 10.0833 11.0903 10.0833 10.584V7.33398C10.0833 6.82772 10.4937 6.41732 11 6.41732ZM11 12.834C11.5063 12.834 11.9167 13.2444 11.9167 13.7507C11.9167 14.2569 11.5063 14.6673 11 14.6673C10.4937 14.6673 10.0833 14.2569 10.0833 13.7507C10.0833 13.2444 10.4937 12.834 11 12.834Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
