@@ -68,6 +68,18 @@ export default {
           red: "#FF7979",
           blue: "#888DA7",
         },
+        // Dark mode colors from Figma design
+        "dark-primary": "#2A2B2F", // Main background
+        "dark-secondary": "#222327", // Sidebar background
+        "dark-tertiary": "#24262C", // Column background
+        "dark-card": "#292B31", // Task card background
+        "dark-border": "rgba(255, 255, 255, 0.1)",
+        "dark-border-light": "rgba(255, 255, 255, 0.06)",
+        "dark-text": "#FFFFFF",
+        "dark-text-secondary": "rgba(255, 255, 255, 0.5)",
+        "dark-text-muted": "rgba(255, 255, 255, 0.3)",
+        "dark-accent": "rgba(255, 255, 255, 0.04)",
+        "dark-accent-light": "rgba(255, 255, 255, 0.02)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -173,6 +185,8 @@ export default {
         "glow-blue": "0 0 20px rgba(59, 130, 246, 0.3)",
         "glow-orange": "0 0 20px rgba(251, 146, 60, 0.3)",
         "glow-red": "0 0 20px rgba(239, 68, 68, 0.3)",
+        "dark-card":
+          "0px -2px 4px 0px rgba(255, 255, 255, 0.04) inset, 6px 20px 36px 0px rgba(28, 29, 34, 0.60)",
       },
       backdropBlur: {
         xs: "2px",
@@ -246,5 +260,3 @@ export default {
     },
   ],
 } satisfies Config;
-
-export default config;
