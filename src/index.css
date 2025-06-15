@@ -152,7 +152,6 @@ body {
   width: 100vw;
   margin: 0;
   padding: 0;
-  overflow: hidden;
   /* Prevent bounce scrolling on iOS */
   overscroll-behavior: none;
   /* Prevent text selection during drag operations */
@@ -175,7 +174,6 @@ textarea,
   height: 100vh;
   width: 100vw;
   min-height: 100vh;
-  overflow: hidden;
 }
 
 /* Enhanced mobile viewport handling */

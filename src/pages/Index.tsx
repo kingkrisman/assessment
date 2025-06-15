@@ -63,7 +63,7 @@ export default function Index() {
   }, [leftSidebarOpen, rightSidebarOpen, screenSize]);
 
   return (
-    <div className="flex w-full h-screen min-h-screen bg-white overflow-hidden relative">
+    <div className="flex w-full h-screen min-h-screen bg-white relative">
       {/* Mobile Navigation Bar */}
       {screenSize === "mobile" && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-brand-gray-200 px-4 py-3 flex items-center justify-between">
@@ -183,7 +183,7 @@ export default function Index() {
 
       {/* Main Kanban Board Area */}
       <div
-        className={`flex-1 flex flex-col min-w-0 h-full overflow-hidden ${
+        className={`flex-1 flex flex-col min-w-0 h-full ${
           screenSize === "mobile" ? "pt-16" : ""
         }`}
       >
