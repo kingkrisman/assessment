@@ -17,10 +17,23 @@ interface TaskCardProps {
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
   onMove: (taskId: string, newStatus: Task["status"]) => void;
+  screenSize: "mobile" | "tablet" | "desktop";
 }
 
-const ProgressIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 12 8" fill="none">
+const ProgressIcon = ({
+  className,
+  screenSize,
+}: {
+  className?: string;
+  screenSize: "mobile" | "tablet" | "desktop";
+}) => (
+  <svg
+    className={`${className} ${
+      screenSize === "mobile" ? "w-3 h-3" : "w-4 h-4"
+    }`}
+    viewBox="0 0 12 8"
+    fill="none"
+  >
     <path
       d="M0.664062 0.666667C0.664062 0.298477 0.962539 0 1.33073 0L1.9974 0C2.36559 0 2.66406 0.298477 2.66406 0.666667C2.66406 1.03486 2.36559 1.33333 1.9974 1.33333H1.33073C0.962539 1.33333 0.664062 1.03486 0.664062 0.666667ZM3.9974 0.666667C3.9974 0.298477 4.29587 0 4.66406 0H10.6641C11.0323 0 11.3307 0.298477 11.3307 0.666667C11.3307 1.03486 11.0323 1.33333 10.6641 1.33333H4.66406C4.29587 1.33333 3.9974 1.03486 3.9974 0.666667ZM0.664062 4C0.664062 3.63181 0.962539 3.33333 1.33073 3.33333H1.9974C2.36559 3.33333 2.66406 3.63181 2.66406 4C2.66406 4.36819 2.36559 4.66667 1.9974 4.66667H1.33073C0.962539 4.66667 0.664062 4.36819 0.664062 4ZM3.9974 4C3.9974 3.63181 4.29587 3.33333 4.66406 3.33333H10.6641C11.0323 3.33333 11.3307 3.63181 11.3307 4C11.3307 4.36819 11.0323 4.66667 10.6641 4.66667H4.66406C4.29587 4.66667 3.9974 4.36819 3.9974 4ZM0.664062 7.33333C0.664062 6.96514 0.962539 6.66667 1.33073 6.66667H1.9974C2.36559 6.66667 2.66406 6.96514 2.66406 7.33333C2.66406 7.70152 2.36559 8 1.9974 8H1.33073C0.962539 8 0.664062 7.70152 0.664062 7.33333ZM3.9974 7.33333C3.9974 6.96514 4.29587 6.66667 4.66406 6.66667H10.6641C11.0323 6.66667 11.3307 6.96514 11.3307 7.33333C11.3307 7.70152 11.0323 8 10.6641 8H4.66406C4.29587 8 3.9974 7.70152 3.9974 7.33333Z"
       fill="currentColor"
@@ -51,14 +64,19 @@ const getDateBadgeColor = (status: string, priority: string) => {
   return "bg-brand-blue/10 text-brand-blue";
 };
 
-const getPriorityIcon = (priority: string) => {
+const getPriorityIcon = (
+  priority: string,
+  screenSize: "mobile" | "tablet" | "desktop",
+) => {
+  const iconSize = screenSize === "mobile" ? "w-2.5 h-2.5" : "w-3 h-3";
+
   switch (priority) {
     case "high":
-      return <AlertCircle className="w-3 h-3 text-red-500" />;
+      return <AlertCircle className={`${iconSize} text-red-500`} />;
     case "medium":
-      return <Clock className="w-3 h-3 text-orange-500" />;
+      return <Clock className={`${iconSize} text-orange-500`} />;
     case "low":
-      return <Star className="w-3 h-3 text-blue-500" />;
+      return <Star className={`${iconSize} text-blue-500`} />;
     default:
       return null;
   }
@@ -76,6 +94,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   onEdit,
   onDelete,
   onMove,
+  screenSize,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -124,10 +143,82 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     onEdit(task);
   };
 
+  // Mobile-specific tap handling
+  const handleTap = () => {
+    if (screenSize === "mobile") {
+      onEdit(task);
+    }
+  };
+
+  const getCardPadding = () => {
+    switch (screenSize) {
+      case "mobile":
+        return "p-3";
+      case "tablet":
+        return "p-4";
+      case "desktop":
+        return "p-5";
+      default:
+        return "p-5";
+    }
+  };
+
+  const getCardSpacing = () => {
+    switch (screenSize) {
+      case "mobile":
+        return "mb-3";
+      case "tablet":
+        return "mb-4";
+      case "desktop":
+        return "mb-4";
+      default:
+        return "mb-4";
+    }
+  };
+
+  const getTextSizes = () => {
+    switch (screenSize) {
+      case "mobile":
+        return {
+          title: "text-sm",
+          category: "text-xs",
+          progress: "text-xs",
+          date: "text-xs",
+          stats: "text-xs",
+        };
+      case "tablet":
+        return {
+          title: "text-sm",
+          category: "text-xs",
+          progress: "text-xs",
+          date: "text-xs",
+          stats: "text-xs",
+        };
+      case "desktop":
+        return {
+          title: "text-base",
+          category: "text-sm",
+          progress: "text-sm",
+          date: "text-sm",
+          stats: "text-sm",
+        };
+      default:
+        return {
+          title: "text-base",
+          category: "text-sm",
+          progress: "text-sm",
+          date: "text-sm",
+          stats: "text-sm",
+        };
+    }
+  };
+
+  const textSizes = getTextSizes();
+
   return (
     <div
       ref={cardRef}
-      className={`relative w-full bg-white rounded-xl border-2 p-5 cursor-move group transition-all duration-200 ${
+      className={`relative w-full bg-white rounded-xl border-2 cursor-move group transition-all duration-200 ${getCardPadding()} ${
         isDragging
           ? "border-brand-dark shadow-2xl scale-105 rotate-2 opacity-80"
           : isHovered
@@ -142,29 +233,30 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             ? "ring-1 ring-orange-200"
             : ""
       }`}
-      draggable
+      draggable={screenSize !== "mobile"}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      onDoubleClick={handleDoubleClick}
+      onDoubleClick={screenSize !== "mobile" ? handleDoubleClick : undefined}
+      onClick={screenSize === "mobile" ? handleTap : undefined}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Priority & Status Indicators */}
-      <div className="absolute top-3 left-3 flex items-center space-x-1">
-        {getPriorityIcon(task.priority)}
+      <div className="absolute top-2 left-2 flex items-center space-x-1">
+        {getPriorityIcon(task.priority, screenSize)}
         {taskIsOverdue && (
-          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+          <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
         )}
         {task.status === "done" && (
-          <div className="w-2 h-2 bg-green-500 rounded-full" />
+          <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
         )}
       </div>
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-4 pt-3">
-        <div className="flex-1 min-w-0">
+      <div className={`flex items-start justify-between ${getCardSpacing()}`}>
+        <div className="flex-1 min-w-0 pt-2">
           <h3
-            className={`text-base font-bold leading-none mb-1 truncate ${
+            className={`${textSizes.title} font-bold leading-none mb-1 truncate ${
               task.status === "done"
                 ? "text-brand-dark/70 line-through"
                 : "text-brand-dark"
@@ -172,21 +264,36 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           >
             {task.title}
           </h3>
-          <p className="text-sm text-brand-dark/50 font-medium truncate">
+          <p
+            className={`${textSizes.category} text-brand-dark/50 font-medium truncate`}
+          >
             {task.category}
           </p>
         </div>
 
-        <div className="relative ml-4 flex-shrink-0">
+        <div className="relative ml-3 flex-shrink-0">
           <button
-            onClick={() => setShowMenu(!showMenu)}
-            className={`w-[26px] h-[26px] rounded-full bg-white border border-brand-gray-300 flex items-center justify-center transition-all duration-200 ${
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowMenu(!showMenu);
+            }}
+            className={`rounded-full bg-white border border-brand-gray-300 flex items-center justify-center transition-all duration-200 ${
               showMenu || isHovered
                 ? "bg-brand-gray-50 border-brand-gray-400 scale-110"
                 : "hover:bg-brand-gray-50"
+            } ${
+              screenSize === "mobile"
+                ? "w-6 h-6"
+                : screenSize === "tablet"
+                  ? "w-7 h-7"
+                  : "w-[26px] h-[26px]"
             }`}
           >
-            <MoreHorizontal className="w-3 h-3 text-brand-dark" />
+            <MoreHorizontal
+              className={`text-brand-dark ${
+                screenSize === "mobile" ? "w-2.5 h-2.5" : "w-3 h-3"
+              }`}
+            />
           </button>
 
           {/* Enhanced Context Menu */}
@@ -194,29 +301,50 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             <>
               <div
                 className="fixed inset-0 z-20"
-                onClick={() => setShowMenu(false)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowMenu(false);
+                }}
               />
-              <div className="absolute right-0 top-8 bg-white border border-brand-gray-200 rounded-lg shadow-card z-30 py-1 min-w-[160px] animate-in slide-in-from-top-2 duration-200">
+              <div
+                className={`absolute right-0 top-8 bg-white border border-brand-gray-200 rounded-lg shadow-card z-30 py-1 animate-in slide-in-from-top-2 duration-200 ${
+                  screenSize === "mobile" ? "min-w-[140px]" : "min-w-[160px]"
+                }`}
+              >
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     onEdit(task);
                     setShowMenu(false);
                   }}
-                  className="flex items-center space-x-3 w-full px-3 py-2 text-sm text-brand-dark hover:bg-brand-gray-50 transition-colors"
+                  className={`flex items-center space-x-3 w-full px-3 py-2 text-brand-dark hover:bg-brand-gray-50 transition-colors ${
+                    screenSize === "mobile" ? "text-xs" : "text-sm"
+                  }`}
                 >
-                  <Edit2 className="w-4 h-4" />
+                  <Edit2
+                    className={`${
+                      screenSize === "mobile" ? "w-3 h-3" : "w-4 h-4"
+                    }`}
+                  />
                   <span>Edit task</span>
                 </button>
 
                 {nextStatus && (
                   <button
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       onMove(task.id, nextStatus);
                       setShowMenu(false);
                     }}
-                    className="flex items-center space-x-3 w-full px-3 py-2 text-sm text-brand-dark hover:bg-brand-gray-50 transition-colors"
+                    className={`flex items-center space-x-3 w-full px-3 py-2 text-brand-dark hover:bg-brand-gray-50 transition-colors ${
+                      screenSize === "mobile" ? "text-xs" : "text-sm"
+                    }`}
                   >
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight
+                      className={`${
+                        screenSize === "mobile" ? "w-3 h-3" : "w-4 h-4"
+                      }`}
+                    />
                     <span>
                       Move to{" "}
                       {nextStatus === "inprogress" ? "In Progress" : "Done"}
@@ -227,13 +355,20 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 <div className="border-t border-brand-gray-100 my-1" />
 
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     onDelete(task.id);
                     setShowMenu(false);
                   }}
-                  className="flex items-center space-x-3 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  className={`flex items-center space-x-3 w-full px-3 py-2 text-red-600 hover:bg-red-50 transition-colors ${
+                    screenSize === "mobile" ? "text-xs" : "text-sm"
+                  }`}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2
+                    className={`${
+                      screenSize === "mobile" ? "w-3 h-3" : "w-4 h-4"
+                    }`}
+                  />
                   <span>Delete task</span>
                 </button>
               </div>
@@ -243,15 +378,26 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       </div>
 
       {/* Enhanced Progress Section */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
+      <div className={`${screenSize === "mobile" ? "mb-4" : "mb-6"}`}>
+        <div
+          className={`flex items-center justify-between ${
+            screenSize === "mobile" ? "mb-1" : "mb-2"
+          }`}
+        >
           <div className="flex items-center space-x-2">
-            <ProgressIcon className="w-4 h-4 text-brand-dark/50" />
-            <span className="text-sm font-semibold text-brand-dark/50">
+            <ProgressIcon
+              className="text-brand-dark/50"
+              screenSize={screenSize}
+            />
+            <span
+              className={`${textSizes.progress} font-semibold text-brand-dark/50`}
+            >
               Progress
             </span>
           </div>
-          <span className="text-sm font-semibold text-brand-dark text-right">
+          <span
+            className={`${textSizes.progress} font-semibold text-brand-dark text-right`}
+          >
             {task.completedTasks}/{task.totalTasks}
           </span>
         </div>
@@ -290,11 +436,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
         {/* Progress Percentage */}
         <div className="flex items-center justify-between mt-1">
-          <span className="text-xs text-brand-dark/40">
+          <span
+            className={`${
+              screenSize === "mobile" ? "text-xs" : "text-xs"
+            } text-brand-dark/40`}
+          >
             {Math.round(task.progress)}% complete
           </span>
           {task.status === "done" && (
-            <span className="text-xs text-green-600 font-medium">✓ Done</span>
+            <span
+              className={`${
+                screenSize === "mobile" ? "text-xs" : "text-xs"
+              } text-green-600 font-medium`}
+            >
+              ✓ Done
+            </span>
           )}
         </div>
       </div>
@@ -303,23 +459,33 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       <div className="flex items-center justify-between">
         {/* Enhanced Date Badge */}
         <div
-          className={`px-4 py-2 rounded-[17px] ${dateBadgeColor} text-sm font-semibold relative ${
+          className={`px-3 py-1.5 rounded-[17px] ${dateBadgeColor} font-semibold relative ${
             taskIsOverdue ? "ring-2 ring-red-300 ring-opacity-50" : ""
-          }`}
+          } ${textSizes.date}`}
         >
           {task.date}
           {taskIsOverdue && (
-            <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-bounce" />
+            <div className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-red-500 rounded-full animate-bounce" />
           )}
         </div>
 
         {/* Right Side - Enhanced Interactions */}
-        <div className="flex items-center space-x-3">
+        <div
+          className={`flex items-center ${
+            screenSize === "mobile" ? "space-x-2" : "space-x-3"
+          }`}
+        >
           {/* Comments */}
           {task.comments > 0 && (
             <div className="flex items-center space-x-1 group/comment">
-              <MessageCircle className="w-[18px] h-[18px] text-brand-dark/50 group-hover/comment:text-blue-500 transition-colors" />
-              <span className="text-sm font-semibold text-brand-dark/50 group-hover/comment:text-blue-500 transition-colors">
+              <MessageCircle
+                className={`text-brand-dark/50 group-hover/comment:text-blue-500 transition-colors ${
+                  screenSize === "mobile" ? "w-4 h-4" : "w-[18px] h-[18px]"
+                }`}
+              />
+              <span
+                className={`${textSizes.stats} font-semibold text-brand-dark/50 group-hover/comment:text-blue-500 transition-colors`}
+              >
                 {task.comments}
               </span>
             </div>
@@ -328,8 +494,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           {/* Attachments */}
           {task.attachments > 0 && (
             <div className="flex items-center space-x-1 group/attachment">
-              <Paperclip className="w-[18px] h-[18px] text-brand-dark/50 group-hover/attachment:text-green-500 transition-colors" />
-              <span className="text-sm font-semibold text-brand-dark/50 group-hover/attachment:text-green-500 transition-colors">
+              <Paperclip
+                className={`text-brand-dark/50 group-hover/attachment:text-green-500 transition-colors ${
+                  screenSize === "mobile" ? "w-4 h-4" : "w-[18px] h-[18px]"
+                }`}
+              />
+              <span
+                className={`${textSizes.stats} font-semibold text-brand-dark/50 group-hover/attachment:text-green-500 transition-colors`}
+              >
                 {task.attachments}
               </span>
             </div>
@@ -337,41 +509,56 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
           {/* Enhanced User Avatars */}
           {task.assignees.length > 0 && (
-            <div className="flex items-center -space-x-2">
-              {task.assignees.slice(0, 3).map((user, index) => (
-                <div
-                  key={user.id}
-                  className="relative w-[30px] h-[30px] rounded-full border-2 border-white overflow-hidden transform transition-transform hover:scale-110 hover:z-10"
-                  style={{ zIndex: task.assignees.length - index }}
-                  title={user.name}
-                >
-                  <img
-                    src={user.avatar}
-                    alt={user.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      // Fallback to colored circle with initials
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                      const parent = target.parentElement;
-                      if (parent) {
-                        parent.className +=
-                          " bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center";
-                        parent.innerHTML = `<span class="text-white text-xs font-bold">${user.name.charAt(0)}</span>`;
-                      }
-                    }}
-                  />
+            <div className="flex items-center -space-x-1.5">
+              {task.assignees
+                .slice(0, screenSize === "mobile" ? 2 : 3)
+                .map((user, index) => (
+                  <div
+                    key={user.id}
+                    className={`relative rounded-full border-2 border-white overflow-hidden transform transition-transform hover:scale-110 hover:z-10 ${
+                      screenSize === "mobile" ? "w-6 h-6" : "w-[30px] h-[30px]"
+                    }`}
+                    style={{ zIndex: task.assignees.length - index }}
+                    title={user.name}
+                  >
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = "none";
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.className +=
+                            " bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center";
+                          parent.innerHTML = `<span class="text-white text-xs font-bold">${user.name.charAt(0)}</span>`;
+                        }
+                      }}
+                    />
 
-                  {/* Online Indicator for First User */}
-                  {index === 0 && (
-                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white" />
-                  )}
-                </div>
-              ))}
-              {task.assignees.length > 3 && (
-                <div className="w-[30px] h-[30px] rounded-full bg-brand-gray-100 border-2 border-white flex items-center justify-center hover:bg-brand-gray-200 transition-colors">
-                  <span className="text-xs font-bold text-brand-dark">
-                    +{task.assignees.length - 3}
+                    {/* Online Indicator for First User */}
+                    {index === 0 && (
+                      <div
+                        className={`absolute -bottom-0.5 -right-0.5 bg-green-400 rounded-full border-2 border-white ${
+                          screenSize === "mobile" ? "w-2 h-2" : "w-3 h-3"
+                        }`}
+                      />
+                    )}
+                  </div>
+                ))}
+              {task.assignees.length > (screenSize === "mobile" ? 2 : 3) && (
+                <div
+                  className={`rounded-full bg-brand-gray-100 border-2 border-white flex items-center justify-center hover:bg-brand-gray-200 transition-colors ${
+                    screenSize === "mobile" ? "w-6 h-6" : "w-[30px] h-[30px]"
+                  }`}
+                >
+                  <span
+                    className={`font-bold text-brand-dark ${
+                      screenSize === "mobile" ? "text-xs" : "text-xs"
+                    }`}
+                  >
+                    +{task.assignees.length - (screenSize === "mobile" ? 2 : 3)}
                   </span>
                 </div>
               )}
@@ -380,11 +567,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         </div>
       </div>
 
-      {/* Hover Actions */}
-      {isHovered && !showMenu && (
+      {/* Hover Actions - Desktop only */}
+      {isHovered && !showMenu && screenSize === "desktop" && (
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/10 to-transparent h-16 rounded-b-xl flex items-end justify-center pb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
-            onClick={() => onEdit(task)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(task);
+            }}
             className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-brand-dark hover:bg-white transition-colors"
           >
             Quick Edit
