@@ -92,9 +92,57 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             {task.category}
           </p>
         </div>
-        <button className="w-[26px] h-[26px] rounded-full bg-white border border-brand-gray-300 flex items-center justify-center ml-4 flex-shrink-0">
-          <MoreHorizontal className="w-3 h-3 text-brand-dark" />
-        </button>
+        <div className="relative ml-4 flex-shrink-0">
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            className="w-[26px] h-[26px] rounded-full bg-white border border-brand-gray-300 flex items-center justify-center hover:bg-brand-gray-50 transition-colors"
+          >
+            <MoreHorizontal className="w-3 h-3 text-brand-dark" />
+          </button>
+
+          {/* Context Menu */}
+          {showMenu && (
+            <div className="absolute right-0 top-8 bg-white border border-brand-gray-200 rounded-lg shadow-card z-10 py-1 min-w-[140px]">
+              <button
+                onClick={() => {
+                  onEdit(task);
+                  setShowMenu(false);
+                }}
+                className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-brand-dark hover:bg-brand-gray-50 transition-colors"
+              >
+                <Edit2 className="w-4 h-4" />
+                <span>Edit task</span>
+              </button>
+
+              {nextStatus && (
+                <button
+                  onClick={() => {
+                    onMove(task.id, nextStatus);
+                    setShowMenu(false);
+                  }}
+                  className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-brand-dark hover:bg-brand-gray-50 transition-colors"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                  <span>
+                    Move to{" "}
+                    {nextStatus === "inprogress" ? "In Progress" : "Done"}
+                  </span>
+                </button>
+              )}
+
+              <button
+                onClick={() => {
+                  onDelete(task.id);
+                  setShowMenu(false);
+                }}
+                className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Delete</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Progress Section */}
