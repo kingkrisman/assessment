@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   MoreHorizontal,
   MessageCircle,
@@ -6,6 +6,9 @@ import {
   Edit2,
   Trash2,
   ArrowRight,
+  Clock,
+  Star,
+  AlertCircle,
 } from "lucide-react";
 import { Task } from "../lib/data";
 
@@ -48,6 +51,26 @@ const getDateBadgeColor = (status: string, priority: string) => {
   return "bg-brand-blue/10 text-brand-blue";
 };
 
+const getPriorityIcon = (priority: string) => {
+  switch (priority) {
+    case "high":
+      return <AlertCircle className="w-3 h-3 text-red-500" />;
+    case "medium":
+      return <Clock className="w-3 h-3 text-orange-500" />;
+    case "low":
+      return <Star className="w-3 h-3 text-blue-500" />;
+    default:
+      return null;
+  }
+};
+
+const isOverdue = (dateString: string) => {
+  const taskDate = new Date(dateString);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return taskDate < today;
+};
+
 export const TaskCard: React.FC<TaskCardProps> = ({
   task,
   onEdit,
@@ -55,12 +78,33 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   onMove,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const progressColor = getProgressColor(task.progress, task.status);
   const progressWidth = `${task.progress}%`;
   const dateBadgeColor = getDateBadgeColor(task.status, task.priority);
+  const taskIsOverdue = isOverdue(task.date) && task.status !== "done";
 
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData("text/plain", task.id);
+    e.dataTransfer.effectAllowed = "move";
+    setIsDragging(true);
+
+    // Add drag image
+    if (cardRef.current) {
+      const dragImage = cardRef.current.cloneNode(true) as HTMLElement;
+      dragImage.style.transform = "rotate(5deg)";
+      dragImage.style.opacity = "0.8";
+      document.body.appendChild(dragImage);
+      e.dataTransfer.setDragImage(dragImage, 160, 89);
+      setTimeout(() => document.body.removeChild(dragImage), 0);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
   };
 
   const getNextStatus = (): Task["status"] | null => {
@@ -76,78 +120,131 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
   const nextStatus = getNextStatus();
 
+  const handleDoubleClick = () => {
+    onEdit(task);
+  };
+
   return (
     <div
-      className="w-full max-w-[320px] bg-white rounded-xl border-2 border-brand-gray-100 p-5 mb-6 cursor-move hover:shadow-lg transition-shadow relative group"
+      ref={cardRef}
+      className={`relative w-full bg-white rounded-xl border-2 p-5 cursor-move group transition-all duration-200 ${
+        isDragging
+          ? "border-brand-dark shadow-2xl scale-105 rotate-2 opacity-80"
+          : isHovered
+            ? "border-brand-gray-300 shadow-lg transform scale-[1.02]"
+            : task.status === "done"
+              ? "border-green-200 shadow-soft"
+              : "border-brand-gray-100 hover:border-brand-gray-200 shadow-soft hover:shadow-card"
+      } ${
+        taskIsOverdue
+          ? "ring-2 ring-red-200 border-red-300"
+          : task.priority === "high"
+            ? "ring-1 ring-orange-200"
+            : ""
+      }`}
       draggable
       onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDoubleClick={handleDoubleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Priority & Status Indicators */}
+      <div className="absolute top-3 left-3 flex items-center space-x-1">
+        {getPriorityIcon(task.priority)}
+        {taskIsOverdue && (
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+        )}
+        {task.status === "done" && (
+          <div className="w-2 h-2 bg-green-500 rounded-full" />
+        )}
+      </div>
+
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <h3 className="text-base font-bold text-brand-dark leading-none mb-1">
+      <div className="flex items-start justify-between mb-4 pt-3">
+        <div className="flex-1 min-w-0">
+          <h3
+            className={`text-base font-bold leading-none mb-1 truncate ${
+              task.status === "done"
+                ? "text-brand-dark/70 line-through"
+                : "text-brand-dark"
+            }`}
+          >
             {task.title}
           </h3>
-          <p className="text-sm text-brand-dark/50 font-medium">
+          <p className="text-sm text-brand-dark/50 font-medium truncate">
             {task.category}
           </p>
         </div>
+
         <div className="relative ml-4 flex-shrink-0">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="w-[26px] h-[26px] rounded-full bg-white border border-brand-gray-300 flex items-center justify-center hover:bg-brand-gray-50 transition-colors"
+            className={`w-[26px] h-[26px] rounded-full bg-white border border-brand-gray-300 flex items-center justify-center transition-all duration-200 ${
+              showMenu || isHovered
+                ? "bg-brand-gray-50 border-brand-gray-400 scale-110"
+                : "hover:bg-brand-gray-50"
+            }`}
           >
             <MoreHorizontal className="w-3 h-3 text-brand-dark" />
           </button>
 
-          {/* Context Menu */}
+          {/* Enhanced Context Menu */}
           {showMenu && (
-            <div className="absolute right-0 top-8 bg-white border border-brand-gray-200 rounded-lg shadow-card z-10 py-1 min-w-[140px]">
-              <button
-                onClick={() => {
-                  onEdit(task);
-                  setShowMenu(false);
-                }}
-                className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-brand-dark hover:bg-brand-gray-50 transition-colors"
-              >
-                <Edit2 className="w-4 h-4" />
-                <span>Edit task</span>
-              </button>
-
-              {nextStatus && (
+            <>
+              <div
+                className="fixed inset-0 z-20"
+                onClick={() => setShowMenu(false)}
+              />
+              <div className="absolute right-0 top-8 bg-white border border-brand-gray-200 rounded-lg shadow-card z-30 py-1 min-w-[160px] animate-in slide-in-from-top-2 duration-200">
                 <button
                   onClick={() => {
-                    onMove(task.id, nextStatus);
+                    onEdit(task);
                     setShowMenu(false);
                   }}
-                  className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-brand-dark hover:bg-brand-gray-50 transition-colors"
+                  className="flex items-center space-x-3 w-full px-3 py-2 text-sm text-brand-dark hover:bg-brand-gray-50 transition-colors"
                 >
-                  <ArrowRight className="w-4 h-4" />
-                  <span>
-                    Move to{" "}
-                    {nextStatus === "inprogress" ? "In Progress" : "Done"}
-                  </span>
+                  <Edit2 className="w-4 h-4" />
+                  <span>Edit task</span>
                 </button>
-              )}
 
-              <button
-                onClick={() => {
-                  onDelete(task.id);
-                  setShowMenu(false);
-                }}
-                className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span>Delete</span>
-              </button>
-            </div>
+                {nextStatus && (
+                  <button
+                    onClick={() => {
+                      onMove(task.id, nextStatus);
+                      setShowMenu(false);
+                    }}
+                    className="flex items-center space-x-3 w-full px-3 py-2 text-sm text-brand-dark hover:bg-brand-gray-50 transition-colors"
+                  >
+                    <ArrowRight className="w-4 h-4" />
+                    <span>
+                      Move to{" "}
+                      {nextStatus === "inprogress" ? "In Progress" : "Done"}
+                    </span>
+                  </button>
+                )}
+
+                <div className="border-t border-brand-gray-100 my-1" />
+
+                <button
+                  onClick={() => {
+                    onDelete(task.id);
+                    setShowMenu(false);
+                  }}
+                  className="flex items-center space-x-3 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Delete task</span>
+                </button>
+              </div>
+            </>
           )}
         </div>
       </div>
 
-      {/* Progress Section */}
+      {/* Enhanced Progress Section */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
             <ProgressIcon className="w-4 h-4 text-brand-dark/50" />
             <span className="text-sm font-semibold text-brand-dark/50">
@@ -158,33 +255,71 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             {task.completedTasks}/{task.totalTasks}
           </span>
         </div>
-        <div className="w-full h-1 bg-brand-gray-200 rounded-sm relative">
+
+        {/* Animated Progress Bar */}
+        <div className="w-full h-1 bg-brand-gray-200 rounded-sm relative overflow-hidden">
           <div
-            className="h-full rounded-sm"
+            className="h-full rounded-sm transition-all duration-700 ease-out relative"
             style={{
               width: progressWidth,
               backgroundColor: progressColor,
             }}
-          ></div>
+          >
+            {/* Progress Animation */}
+            <div
+              className="absolute inset-0 bg-white/30 animate-pulse"
+              style={{
+                animation:
+                  task.status === "inprogress" ? "pulse 2s infinite" : "none",
+              }}
+            />
+          </div>
+
+          {/* Progress Shine Effect */}
+          {task.progress > 0 && (
+            <div
+              className="absolute top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-12 animate-slide-progress"
+              style={{
+                left: `${task.progress - 30}%`,
+                animationDuration: "3s",
+                animationDelay: "1s",
+              }}
+            />
+          )}
+        </div>
+
+        {/* Progress Percentage */}
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-xs text-brand-dark/40">
+            {Math.round(task.progress)}% complete
+          </span>
+          {task.status === "done" && (
+            <span className="text-xs text-green-600 font-medium">✓ Done</span>
+          )}
         </div>
       </div>
 
       {/* Bottom Section */}
       <div className="flex items-center justify-between">
-        {/* Date Badge */}
+        {/* Enhanced Date Badge */}
         <div
-          className={`px-4 py-2 rounded-[17px] ${dateBadgeColor} text-sm font-semibold`}
+          className={`px-4 py-2 rounded-[17px] ${dateBadgeColor} text-sm font-semibold relative ${
+            taskIsOverdue ? "ring-2 ring-red-300 ring-opacity-50" : ""
+          }`}
         >
           {task.date}
+          {taskIsOverdue && (
+            <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-bounce" />
+          )}
         </div>
 
-        {/* Right Side - Comments, Attachments, Avatars */}
+        {/* Right Side - Enhanced Interactions */}
         <div className="flex items-center space-x-3">
           {/* Comments */}
           {task.comments > 0 && (
-            <div className="flex items-center space-x-1">
-              <MessageCircle className="w-[18px] h-[18px] text-brand-dark/50" />
-              <span className="text-sm font-semibold text-brand-dark/50">
+            <div className="flex items-center space-x-1 group/comment">
+              <MessageCircle className="w-[18px] h-[18px] text-brand-dark/50 group-hover/comment:text-blue-500 transition-colors" />
+              <span className="text-sm font-semibold text-brand-dark/50 group-hover/comment:text-blue-500 transition-colors">
                 {task.comments}
               </span>
             </div>
@@ -192,34 +327,51 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
           {/* Attachments */}
           {task.attachments > 0 && (
-            <div className="flex items-center space-x-1">
-              <Paperclip className="w-[18px] h-[18px] text-brand-dark/50" />
-              <span className="text-sm font-semibold text-brand-dark/50">
+            <div className="flex items-center space-x-1 group/attachment">
+              <Paperclip className="w-[18px] h-[18px] text-brand-dark/50 group-hover/attachment:text-green-500 transition-colors" />
+              <span className="text-sm font-semibold text-brand-dark/50 group-hover/attachment:text-green-500 transition-colors">
                 {task.attachments}
               </span>
             </div>
           )}
 
-          {/* User Avatars */}
+          {/* Enhanced User Avatars */}
           {task.assignees.length > 0 && (
             <div className="flex items-center -space-x-2">
-              {task.assignees.slice(0, 2).map((user, index) => (
+              {task.assignees.slice(0, 3).map((user, index) => (
                 <div
                   key={user.id}
-                  className="w-[30px] h-[30px] rounded-full border-2 border-white overflow-hidden"
+                  className="relative w-[30px] h-[30px] rounded-full border-2 border-white overflow-hidden transform transition-transform hover:scale-110 hover:z-10"
                   style={{ zIndex: task.assignees.length - index }}
+                  title={user.name}
                 >
                   <img
                     src={user.avatar}
                     alt={user.name}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to colored circle with initials
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = "none";
+                      const parent = target.parentElement;
+                      if (parent) {
+                        parent.className +=
+                          " bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center";
+                        parent.innerHTML = `<span class="text-white text-xs font-bold">${user.name.charAt(0)}</span>`;
+                      }
+                    }}
                   />
+
+                  {/* Online Indicator for First User */}
+                  {index === 0 && (
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white" />
+                  )}
                 </div>
               ))}
-              {task.assignees.length > 2 && (
-                <div className="w-[30px] h-[30px] rounded-full bg-white border-2 border-brand-gray-300 flex items-center justify-center">
+              {task.assignees.length > 3 && (
+                <div className="w-[30px] h-[30px] rounded-full bg-brand-gray-100 border-2 border-white flex items-center justify-center hover:bg-brand-gray-200 transition-colors">
                   <span className="text-xs font-bold text-brand-dark">
-                    +{task.assignees.length - 2}
+                    +{task.assignees.length - 3}
                   </span>
                 </div>
               )}
@@ -227,6 +379,18 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           )}
         </div>
       </div>
+
+      {/* Hover Actions */}
+      {isHovered && !showMenu && (
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/10 to-transparent h-16 rounded-b-xl flex items-end justify-center pb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <button
+            onClick={() => onEdit(task)}
+            className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-brand-dark hover:bg-white transition-colors"
+          >
+            Quick Edit
+          </button>
+        </div>
+      )}
     </div>
   );
 };
