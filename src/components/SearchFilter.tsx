@@ -225,7 +225,11 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
           {quickFilters.map((filter, index) => (
             <button
               key={index}
-              className="flex-shrink-0 px-3 py-1.5 bg-brand-gray-100 text-brand-dark rounded-full text-xs font-medium hover:bg-brand-gray-200 transition-colors"
+              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                isDark
+                  ? "bg-dark-accent text-dark-text hover:bg-dark-border"
+                  : "bg-brand-gray-100 text-brand-dark hover:bg-brand-gray-200"
+              }`}
             >
               {filter.label}
             </button>
