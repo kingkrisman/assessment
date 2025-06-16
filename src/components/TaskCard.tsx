@@ -345,9 +345,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                     onEdit(task);
                     setShowMenu(false);
                   }}
-                  className={`flex items-center space-x-3 w-full px-3 py-2 text-brand-dark hover:bg-brand-gray-50 transition-colors ${
-                    screenSize === "mobile" ? "text-xs" : "text-sm"
-                  }`}
+                  className={`flex items-center space-x-3 w-full px-3 py-2 transition-colors ${
+                    isDark
+                      ? "text-dark-text hover:bg-dark-accent"
+                      : "text-brand-dark hover:bg-brand-gray-50"
+                  } ${screenSize === "mobile" ? "text-xs" : "text-sm"}`}
                 >
                   <Edit2
                     className={`${
@@ -364,9 +366,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                       onMove(task.id, nextStatus);
                       setShowMenu(false);
                     }}
-                    className={`flex items-center space-x-3 w-full px-3 py-2 text-brand-dark hover:bg-brand-gray-50 transition-colors ${
-                      screenSize === "mobile" ? "text-xs" : "text-sm"
-                    }`}
+                    className={`flex items-center space-x-3 w-full px-3 py-2 transition-colors ${
+                      isDark
+                        ? "text-dark-text hover:bg-dark-accent"
+                        : "text-brand-dark hover:bg-brand-gray-50"
+                    } ${screenSize === "mobile" ? "text-xs" : "text-sm"}`}
                   >
                     <ArrowRight
                       className={`${
@@ -380,7 +384,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                   </button>
                 )}
 
-                <div className="border-t border-brand-gray-100 my-1" />
+                <div
+                  className={`border-t my-1 ${
+                    isDark ? "border-dark-border" : "border-brand-gray-100"
+                  }`}
+                />
 
                 <button
                   onClick={(e) => {
