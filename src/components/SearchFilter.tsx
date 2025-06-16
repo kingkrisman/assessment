@@ -240,9 +240,11 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
       {/* Expanded Filters */}
       {showFilters && (
         <div
-          className={`bg-white border border-brand-gray-200 rounded-lg p-4 space-y-6 ${
-            screenSize === "mobile" ? "p-3 space-y-4" : ""
-          }`}
+          className={`border rounded-lg p-4 space-y-6 ${
+            isDark
+              ? "bg-dark-card border-dark-border"
+              : "bg-white border-brand-gray-200"
+          } ${screenSize === "mobile" ? "p-3 space-y-4" : ""}`}
         >
           {/* Quick Filters - Desktop/Tablet */}
           {screenSize !== "mobile" && (
