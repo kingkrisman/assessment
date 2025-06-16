@@ -515,7 +515,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ screenSize }) => {
         >
           {/* Light Mode */}
           <button
-            onClick={() => !isDark && toggleTheme()}
+            onClick={() => isDark && toggleTheme()}
             className={`flex-1 flex items-center justify-center rounded-2xl px-3 lg:px-4 py-2 transition-all ${
               !isDark
                 ? "bg-white shadow-soft"
@@ -549,7 +549,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ screenSize }) => {
 
           {/* Dark Mode */}
           <button
-            onClick={() => isDark && toggleTheme()}
+            onClick={() => !isDark && toggleTheme()}
             className={`flex-1 flex items-center justify-center rounded-2xl px-3 lg:px-4 py-2 transition-all ${
               isDark
                 ? "bg-dark-border shadow-soft"
