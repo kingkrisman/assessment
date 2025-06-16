@@ -24,6 +24,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
   totalTasks,
   screenSize,
 }) => {
+  const { isDark } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState({
