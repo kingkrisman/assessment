@@ -97,6 +97,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   onMove,
   screenSize,
 }) => {
+  const { isDark } = useTheme();
   const [showMenu, setShowMenu] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
