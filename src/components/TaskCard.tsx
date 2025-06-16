@@ -443,7 +443,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         </div>
 
         {/* Animated Progress Bar */}
-        <div className="w-full h-1 bg-brand-gray-200 rounded-sm relative overflow-hidden">
+        <div
+          className={`w-full h-1 rounded-sm relative overflow-hidden ${
+            isDark ? "bg-dark-border" : "bg-brand-gray-200"
+          }`}
+        >
           <div
             className="h-full rounded-sm transition-all duration-700 ease-out relative"
             style={{
