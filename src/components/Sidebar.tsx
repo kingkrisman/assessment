@@ -518,9 +518,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ screenSize }) => {
             onClick={() => !isDark && toggleTheme()}
             className={`flex-1 flex items-center justify-center rounded-2xl px-3 lg:px-4 py-2 transition-all ${
               !isDark
-                ? isDark
-                  ? "bg-dark-border shadow-soft"
-                  : "bg-white shadow-soft"
+                ? "bg-white shadow-soft"
                 : "hover:bg-opacity-10 hover:bg-white"
             }`}
           >
@@ -554,9 +552,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ screenSize }) => {
             onClick={() => isDark && toggleTheme()}
             className={`flex-1 flex items-center justify-center rounded-2xl px-3 lg:px-4 py-2 transition-all ${
               isDark
-                ? isDark
-                  ? "bg-dark-border shadow-soft"
-                  : "bg-white shadow-soft"
+                ? "bg-dark-border shadow-soft"
                 : "hover:bg-opacity-10 hover:bg-gray-600"
             }`}
           >
