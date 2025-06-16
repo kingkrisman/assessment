@@ -422,17 +422,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         >
           <div className="flex items-center space-x-2">
             <ProgressIcon
-              className="text-brand-dark/50"
+              className={isDark ? "text-dark-text-muted" : "text-brand-dark/50"}
               screenSize={screenSize}
             />
             <span
-              className={`${textSizes.progress} font-semibold text-brand-dark/50`}
+              className={`${textSizes.progress} font-semibold ${
+                isDark ? "text-dark-text-muted" : "text-brand-dark/50"
+              }`}
             >
               Progress
             </span>
           </div>
           <span
-            className={`${textSizes.progress} font-semibold text-brand-dark text-right`}
+            className={`${textSizes.progress} font-semibold text-right ${
+              isDark ? "text-dark-text" : "text-brand-dark"
+            }`}
           >
             {task.completedTasks}/{task.totalTasks}
           </span>
