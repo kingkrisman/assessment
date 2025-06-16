@@ -519,11 +519,19 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
                   {filteredTasks.map((task) => (
                     <div
                       key={task.id}
-                      className="bg-white border border-brand-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      className={`border rounded-lg p-4 hover:shadow-md transition-shadow ${
+                        isDark
+                          ? "bg-dark-card border-dark-border"
+                          : "bg-white border-brand-gray-200"
+                      }`}
                       onClick={() => handleEditTask(task)}
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <h3 className="text-sm font-semibold text-brand-dark">
+                        <h3
+                          className={`text-sm font-semibold ${
+                            isDark ? "text-dark-text" : "text-brand-dark"
+                          }`}
+                        >
                           {task.title}
                         </h3>
                         <span
@@ -541,11 +549,23 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
                               task.status.slice(1)}
                         </span>
                       </div>
-                      <p className="text-xs text-brand-dark/60 mb-3">
+                      <p
+                        className={`text-xs mb-3 ${
+                          isDark
+                            ? "text-dark-text-secondary"
+                            : "text-brand-dark/60"
+                        }`}
+                      >
                         {task.category}
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-brand-dark/60">
+                        <span
+                          className={`text-xs ${
+                            isDark
+                              ? "text-dark-text-secondary"
+                              : "text-brand-dark/60"
+                          }`}
+                        >
                           {task.date}
                         </span>
                         <div className="flex items-center space-x-2">
@@ -562,7 +582,13 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
                             </div>
                           ))}
                           {task.assignees.length > 2 && (
-                            <span className="text-xs text-brand-dark/60">
+                            <span
+                              className={`text-xs ${
+                                isDark
+                                  ? "text-dark-text-secondary"
+                                  : "text-brand-dark/60"
+                              }`}
+                            >
                               +{task.assignees.length - 2}
                             </span>
                           )}
