@@ -481,9 +481,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         {/* Progress Percentage */}
         <div className="flex items-center justify-between mt-1">
           <span
-            className={`${
-              screenSize === "mobile" ? "text-xs" : "text-xs"
-            } text-brand-dark/40`}
+            className={`${screenSize === "mobile" ? "text-xs" : "text-xs"} ${
+              isDark ? "text-dark-text-muted" : "text-brand-dark/40"
+            }`}
           >
             {Math.round(task.progress)}% complete
           </span>
