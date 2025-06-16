@@ -282,9 +282,9 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
           {/* Status Filter */}
           <div>
             <h4
-              className={`font-semibold text-brand-dark mb-3 ${
-                screenSize === "mobile" ? "text-sm" : "text-base"
-              }`}
+              className={`font-semibold mb-3 ${
+                isDark ? "text-dark-text" : "text-brand-dark"
+              } ${screenSize === "mobile" ? "text-sm" : "text-base"}`}
             >
               Status
             </h4>
