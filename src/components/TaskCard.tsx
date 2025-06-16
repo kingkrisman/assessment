@@ -523,12 +523,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           {task.comments > 0 && (
             <div className="flex items-center space-x-1 group/comment">
               <MessageCircle
-                className={`text-brand-dark/50 group-hover/comment:text-blue-500 transition-colors ${
-                  screenSize === "mobile" ? "w-4 h-4" : "w-[18px] h-[18px]"
-                }`}
+                className={`group-hover/comment:text-blue-500 transition-colors ${
+                  isDark ? "text-dark-text-muted" : "text-brand-dark/50"
+                } ${screenSize === "mobile" ? "w-4 h-4" : "w-[18px] h-[18px]"}`}
               />
               <span
-                className={`${textSizes.stats} font-semibold text-brand-dark/50 group-hover/comment:text-blue-500 transition-colors`}
+                className={`${textSizes.stats} font-semibold group-hover/comment:text-blue-500 transition-colors ${
+                  isDark ? "text-dark-text-muted" : "text-brand-dark/50"
+                }`}
               >
                 {task.comments}
               </span>
@@ -539,12 +541,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           {task.attachments > 0 && (
             <div className="flex items-center space-x-1 group/attachment">
               <Paperclip
-                className={`text-brand-dark/50 group-hover/attachment:text-green-500 transition-colors ${
-                  screenSize === "mobile" ? "w-4 h-4" : "w-[18px] h-[18px]"
-                }`}
+                className={`group-hover/attachment:text-green-500 transition-colors ${
+                  isDark ? "text-dark-text-muted" : "text-brand-dark/50"
+                } ${screenSize === "mobile" ? "w-4 h-4" : "w-[18px] h-[18px]"}`}
               />
               <span
-                className={`${textSizes.stats} font-semibold text-brand-dark/50 group-hover/attachment:text-green-500 transition-colors`}
+                className={`${textSizes.stats} font-semibold group-hover/attachment:text-green-500 transition-colors ${
+                  isDark ? "text-dark-text-muted" : "text-brand-dark/50"
+                }`}
               >
                 {task.attachments}
               </span>
