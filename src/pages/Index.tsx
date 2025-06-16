@@ -4,6 +4,7 @@ import { Sidebar } from "../components/Sidebar";
 import { KanbanBoard } from "../components/KanbanBoard";
 import { Menu, X, Settings, Folder } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
+import { ThemeDebug } from "../components/ThemeDebug";
 
 export default function Index() {
   const { isDark } = useTheme();
@@ -230,6 +231,9 @@ export default function Index() {
       >
         <KanbanBoard screenSize={screenSize} />
       </div>
+
+      {/* Debug component */}
+      <ThemeDebug />
     </div>
   );
 }
