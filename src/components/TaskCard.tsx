@@ -268,14 +268,20 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           <h3
             className={`${textSizes.title} font-bold leading-none mb-1 truncate ${
               task.status === "done"
-                ? "text-brand-dark/70 line-through"
-                : "text-brand-dark"
+                ? isDark
+                  ? "text-dark-text-secondary line-through"
+                  : "text-brand-dark/70 line-through"
+                : isDark
+                  ? "text-dark-text"
+                  : "text-brand-dark"
             }`}
           >
             {task.title}
           </h3>
           <p
-            className={`${textSizes.category} text-brand-dark/50 font-medium truncate`}
+            className={`${textSizes.category} font-medium truncate ${
+              isDark ? "text-dark-text-muted" : "text-brand-dark/50"
+            }`}
           >
             {task.category}
           </p>
