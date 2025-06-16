@@ -383,9 +383,9 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
           {/* Team Members - Simplified for mobile */}
           <div>
             <h4
-              className={`font-semibold text-brand-dark mb-3 ${
-                screenSize === "mobile" ? "text-sm" : "text-base"
-              }`}
+              className={`font-semibold mb-3 ${
+                isDark ? "text-dark-text" : "text-brand-dark"
+              } ${screenSize === "mobile" ? "text-sm" : "text-base"}`}
             >
               Assigned to
             </h4>
