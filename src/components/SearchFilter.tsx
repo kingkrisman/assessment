@@ -112,9 +112,9 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
       {/* Search Bar */}
       <div className="relative">
         <Search
-          className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-brand-dark/40 ${
-            screenSize === "mobile" ? "w-4 h-4" : "w-5 h-5"
-          }`}
+          className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
+            isDark ? "text-dark-text-muted" : "text-brand-dark/40"
+          } ${screenSize === "mobile" ? "w-4 h-4" : "w-5 h-5"}`}
         />
         <input
           type="text"
@@ -125,7 +125,11 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
           }
           value={searchQuery}
           onChange={handleSearchChange}
-          className={`w-full bg-white border border-brand-gray-200 rounded-lg text-brand-dark placeholder-brand-dark/40 focus:outline-none focus:ring-2 focus:ring-brand-success/20 focus:border-brand-success/30 transition-colors ${
+          className={`w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-success/20 focus:border-brand-success/30 transition-colors ${
+            isDark
+              ? "bg-dark-accent border-dark-border text-dark-text placeholder-dark-text-muted"
+              : "bg-white border-brand-gray-200 text-brand-dark placeholder-brand-dark/40"
+          } ${
             screenSize === "mobile"
               ? "pl-10 pr-10 py-2.5 text-sm"
               : "pl-12 pr-12 py-3 text-base"
@@ -134,9 +138,11 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
         {searchQuery && (
           <button
             onClick={clearSearch}
-            className={`absolute right-3 top-1/2 transform -translate-y-1/2 text-brand-dark/40 hover:text-brand-dark/60 transition-colors ${
-              screenSize === "mobile" ? "w-4 h-4" : "w-5 h-5"
-            }`}
+            className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${
+              isDark
+                ? "text-dark-text-muted hover:text-dark-text-secondary"
+                : "text-brand-dark/40 hover:text-brand-dark/60"
+            } ${screenSize === "mobile" ? "w-4 h-4" : "w-5 h-5"}`}
           >
             <X className="w-full h-full" />
           </button>
