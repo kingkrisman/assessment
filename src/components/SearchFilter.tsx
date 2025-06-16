@@ -9,6 +9,7 @@ import {
   Clock,
   AlertCircle,
 } from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface SearchFilterProps {
   onSearch: (query: string) => void;
