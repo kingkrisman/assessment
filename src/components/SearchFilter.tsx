@@ -304,7 +304,9 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
                   className={`flex items-center justify-between px-3 py-2 rounded-lg border transition-colors ${
                     activeFilters.status.includes(option.value)
                       ? "border-brand-success bg-brand-success/5"
-                      : "border-brand-gray-200 hover:bg-brand-gray-50"
+                      : isDark
+                        ? "border-dark-border hover:bg-dark-accent"
+                        : "border-brand-gray-200 hover:bg-brand-gray-50"
                   }`}
                 >
                   <span
