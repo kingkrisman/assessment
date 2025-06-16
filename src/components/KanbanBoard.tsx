@@ -458,7 +458,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ screenSize }) => {
       )}
 
       {/* Kanban Board Content */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-scroll">
         {/* Desktop/Tablet View */}
         {screenSize !== "mobile" && (
           <div className="h-full">
