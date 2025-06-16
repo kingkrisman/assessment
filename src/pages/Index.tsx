@@ -91,7 +91,6 @@ export default function Index() {
               className={`w-5 h-5 ${isDark ? "text-dark-text" : "text-brand-dark"}`}
             />
           </button>
-
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-brand-dark rounded-lg flex items-center justify-center">
               <svg width="16" height="18" viewBox="0 0 24 26" fill="none">
