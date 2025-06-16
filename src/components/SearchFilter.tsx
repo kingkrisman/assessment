@@ -250,9 +250,9 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
           {screenSize !== "mobile" && (
             <div>
               <h4
-                className={`font-semibold text-brand-dark mb-3 ${
-                  screenSize === "tablet" ? "text-sm" : "text-base"
-                }`}
+                className={`font-semibold mb-3 ${
+                  isDark ? "text-dark-text" : "text-brand-dark"
+                } ${screenSize === "tablet" ? "text-sm" : "text-base"}`}
               >
                 Quick Filters
               </h4>
