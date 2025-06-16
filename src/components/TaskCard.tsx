@@ -11,6 +11,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { Task } from "../lib/data";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface TaskCardProps {
   task: Task;
