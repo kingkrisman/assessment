@@ -154,19 +154,27 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center space-x-2 px-3 py-2 rounded-lg border border-brand-gray-200 hover:bg-brand-gray-50 transition-colors ${
-              showFilters ? "bg-brand-gray-100" : "bg-white"
+            className={`flex items-center space-x-2 px-3 py-2 rounded-lg border transition-colors ${
+              isDark
+                ? `border-dark-border ${
+                    showFilters
+                      ? "bg-dark-accent"
+                      : "bg-dark-card hover:bg-dark-accent"
+                  }`
+                : `border-brand-gray-200 hover:bg-brand-gray-50 ${
+                    showFilters ? "bg-brand-gray-100" : "bg-white"
+                  }`
             }`}
           >
             <Filter
-              className={`text-brand-dark ${
+              className={`${isDark ? "text-dark-text" : "text-brand-dark"} ${
                 screenSize === "mobile" ? "w-3 h-3" : "w-4 h-4"
               }`}
             />
             <span
-              className={`font-medium text-brand-dark ${
-                screenSize === "mobile" ? "text-xs" : "text-sm"
-              }`}
+              className={`font-medium ${
+                isDark ? "text-dark-text" : "text-brand-dark"
+              } ${screenSize === "mobile" ? "text-xs" : "text-sm"}`}
             >
               Filters
             </span>
@@ -182,7 +190,9 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
               </span>
             )}
             <ChevronDown
-              className={`text-brand-dark/60 transition-transform ${
+              className={`transition-transform ${
+                isDark ? "text-dark-text-secondary" : "text-brand-dark/60"
+              } ${
                 showFilters ? "rotate-180" : ""
               } ${screenSize === "mobile" ? "w-3 h-3" : "w-4 h-4"}`}
             />
@@ -201,9 +211,9 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
         </div>
 
         <div
-          className={`text-brand-dark/60 ${
-            screenSize === "mobile" ? "text-xs" : "text-sm"
-          }`}
+          className={`${
+            isDark ? "text-dark-text-secondary" : "text-brand-dark/60"
+          } ${screenSize === "mobile" ? "text-xs" : "text-sm"}`}
         >
           {totalTasks} results
         </div>
