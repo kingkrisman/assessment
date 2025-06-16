@@ -220,14 +220,22 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   return (
     <div
       ref={cardRef}
-      className={`relative w-full bg-white rounded-xl border-2 cursor-move group transition-all duration-200 ${getCardPadding()} ${
+      className={`relative w-full rounded-xl border-2 cursor-move group transition-all duration-200 ${getCardPadding()} ${
+        isDark ? "bg-dark-card" : "bg-white"
+      } ${
         isDragging
-          ? "border-brand-dark shadow-2xl scale-105 rotate-2 opacity-80"
+          ? isDark
+            ? "border-dark-text shadow-2xl scale-105 rotate-2 opacity-80"
+            : "border-brand-dark shadow-2xl scale-105 rotate-2 opacity-80"
           : isHovered
-            ? "border-brand-gray-300 shadow-lg transform scale-[1.02]"
+            ? isDark
+              ? "border-dark-border shadow-lg transform scale-[1.02]"
+              : "border-brand-gray-300 shadow-lg transform scale-[1.02]"
             : task.status === "done"
               ? "border-green-200 shadow-soft"
-              : "border-brand-gray-100 hover:border-brand-gray-200 shadow-soft hover:shadow-card"
+              : isDark
+                ? "border-dark-border hover:border-dark-accent shadow-soft hover:shadow-card"
+                : "border-brand-gray-100 hover:border-brand-gray-200 shadow-soft hover:shadow-card"
       } ${
         taskIsOverdue
           ? "ring-2 ring-red-200 border-red-300"
