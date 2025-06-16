@@ -266,9 +266,11 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
                 {quickFilters.map((filter, index) => (
                   <button
                     key={index}
-                    className={`px-3 py-2 bg-brand-gray-100 text-brand-dark rounded-lg hover:bg-brand-gray-200 transition-colors text-left ${
-                      screenSize === "tablet" ? "text-sm" : "text-sm"
-                    }`}
+                    className={`px-3 py-2 rounded-lg transition-colors text-left ${
+                      isDark
+                        ? "bg-dark-accent text-dark-text hover:bg-dark-border"
+                        : "bg-brand-gray-100 text-brand-dark hover:bg-brand-gray-200"
+                    } ${screenSize === "tablet" ? "text-sm" : "text-sm"}`}
                   >
                     {filter.label}
                   </button>
