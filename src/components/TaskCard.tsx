@@ -293,10 +293,18 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               e.stopPropagation();
               setShowMenu(!showMenu);
             }}
-            className={`rounded-full bg-white border border-brand-gray-300 flex items-center justify-center transition-all duration-200 ${
-              showMenu || isHovered
-                ? "bg-brand-gray-50 border-brand-gray-400 scale-110"
-                : "hover:bg-brand-gray-50"
+            className={`rounded-full border flex items-center justify-center transition-all duration-200 ${
+              isDark
+                ? `bg-dark-accent border-dark-border ${
+                    showMenu || isHovered
+                      ? "bg-dark-border border-dark-text scale-110"
+                      : "hover:bg-dark-border"
+                  }`
+                : `bg-white border-brand-gray-300 ${
+                    showMenu || isHovered
+                      ? "bg-brand-gray-50 border-brand-gray-400 scale-110"
+                      : "hover:bg-brand-gray-50"
+                  }`
             } ${
               screenSize === "mobile"
                 ? "w-6 h-6"
@@ -306,7 +314,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             }`}
           >
             <MoreHorizontal
-              className={`text-brand-dark ${
+              className={`${isDark ? "text-dark-text" : "text-brand-dark"} ${
                 screenSize === "mobile" ? "w-2.5 h-2.5" : "w-3 h-3"
               }`}
             />
