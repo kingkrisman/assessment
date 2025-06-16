@@ -411,7 +411,9 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
                   className={`flex items-center justify-between px-3 py-2 rounded-lg border transition-colors ${
                     activeFilters.assignee.includes((index + 1).toString())
                       ? "border-brand-success bg-brand-success/5"
-                      : "border-brand-gray-200 hover:bg-brand-gray-50"
+                      : isDark
+                        ? "border-dark-border hover:bg-dark-accent"
+                        : "border-brand-gray-200 hover:bg-brand-gray-50"
                   }`}
                 >
                   <div className="flex items-center space-x-2">
@@ -425,9 +427,9 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
                       {name.charAt(0)}
                     </div>
                     <span
-                      className={`text-brand-dark font-medium ${
-                        screenSize === "mobile" ? "text-sm" : "text-sm"
-                      }`}
+                      className={`font-medium ${
+                        isDark ? "text-dark-text" : "text-brand-dark"
+                      } ${screenSize === "mobile" ? "text-sm" : "text-sm"}`}
                     >
                       {name}
                     </span>
