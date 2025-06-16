@@ -7,6 +7,10 @@ import { useTheme } from "../contexts/ThemeContext";
 
 export default function Index() {
   const { isDark } = useTheme();
+
+  // Debug log
+  console.log("Theme isDark:", isDark);
+
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [rightSidebarOpen, setRightSidebarOpen] = useState(false);
   const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">(
