@@ -331,7 +331,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 }}
               />
               <div
-                className={`absolute right-0 top-8 bg-white border border-brand-gray-200 rounded-lg shadow-card z-30 py-1 animate-in slide-in-from-top-2 duration-200 ${
+                className={`absolute right-0 top-8 border rounded-lg shadow-card z-30 py-1 animate-in slide-in-from-top-2 duration-200 ${
+                  isDark
+                    ? "bg-dark-card border-dark-border"
+                    : "bg-white border-brand-gray-200"
+                } ${
                   screenSize === "mobile" ? "min-w-[140px]" : "min-w-[160px]"
                 }`}
               >
