@@ -68,18 +68,24 @@ export default {
           red: "#FF7979",
           blue: "#888DA7",
         },
-        // Dark mode colors from Figma design
-        "dark-primary": "#2A2B2F", // Main background
-        "dark-secondary": "#222327", // Sidebar background
-        "dark-tertiary": "#24262C", // Column background
-        "dark-card": "#292B31", // Task card background
-        "dark-border": "rgba(255, 255, 255, 0.1)",
-        "dark-border-light": "rgba(255, 255, 255, 0.06)",
-        "dark-text": "#FFFFFF",
-        "dark-text-secondary": "rgba(255, 255, 255, 0.5)",
-        "dark-text-muted": "rgba(255, 255, 255, 0.3)",
-        "dark-accent": "rgba(255, 255, 255, 0.04)",
-        "dark-accent-light": "rgba(255, 255, 255, 0.02)",
+        // Dark mode colors from Figma design - proper nested structure
+        dark: {
+          primary: "#2A2B2F", // Main background
+          secondary: "#222327", // Sidebar background
+          tertiary: "#24262C", // Column background
+          card: "#292B31", // Task card background
+          border: "rgba(255, 255, 255, 0.1)",
+          "border-light": "rgba(255, 255, 255, 0.06)",
+          text: {
+            DEFAULT: "#FFFFFF",
+            secondary: "rgba(255, 255, 255, 0.5)",
+            muted: "rgba(255, 255, 255, 0.3)",
+          },
+          accent: {
+            DEFAULT: "rgba(255, 255, 255, 0.04)",
+            light: "rgba(255, 255, 255, 0.02)",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
