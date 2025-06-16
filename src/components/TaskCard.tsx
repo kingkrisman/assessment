@@ -597,14 +597,18 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 ))}
               {task.assignees.length > (screenSize === "mobile" ? 2 : 3) && (
                 <div
-                  className={`rounded-full bg-brand-gray-100 border-2 border-white flex items-center justify-center hover:bg-brand-gray-200 transition-colors ${
+                  className={`rounded-full border-2 flex items-center justify-center transition-colors ${
+                    isDark
+                      ? "bg-dark-accent border-dark-card hover:bg-dark-border"
+                      : "bg-brand-gray-100 border-white hover:bg-brand-gray-200"
+                  } ${
                     screenSize === "mobile" ? "w-6 h-6" : "w-[30px] h-[30px]"
                   }`}
                 >
                   <span
-                    className={`font-bold text-brand-dark ${
-                      screenSize === "mobile" ? "text-xs" : "text-xs"
-                    }`}
+                    className={`font-bold ${
+                      isDark ? "text-dark-text" : "text-brand-dark"
+                    } ${screenSize === "mobile" ? "text-xs" : "text-xs"}`}
                   >
                     +{task.assignees.length - (screenSize === "mobile" ? 2 : 3)}
                   </span>
